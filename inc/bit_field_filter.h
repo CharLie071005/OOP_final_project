@@ -1,38 +1,42 @@
+#ifndef _BIT_FIELD_FILTER_H_ 
+#define _BIT_FIELD_FILTER_H_ 
+
 #include <stdio.h>
 #include <stdint.h>
+#include <iostream>
+#include <string>
 
-/*©w∏q•|≠”¬o√Ë™∫≠»
-#define Box_Filter    0b00000001
-#define CASE_TWO    0b00000010
-#define CASE_THREE  0b00000100
-#define CASE_FOUR   0b00001000
+//ÂÆöÁæ©ÂõõÂÄãÊøæÈè°ÁöÑÂÄº
+#define GRAY_BOX    0b00000001
+#define GRAY_TWO    0b00000010
+#define GRAY_THREE  0b00000100
+#define GRAY_FOUR   0b00001000
+#define RGB_BOX     0b00010000
+#define RGB_TWO     0b00100000
+#define RGB_THREE   0b01000000
+#define RGB_FOUR    0b10000000
+
+void Gray_Box_Filter(Image image);
 
 //using bitwise and to track whtat is the user's option
 void loadCase(int8_t image){
-    if(option & CASE_ONE)
-        //
-    if(option & CASE_TWO)
+    if(option & GRAY_BOX)
+        Gray_Box_Filter(Image image);
+    if(option & GRAY_TWO)
         //printf("Case 2 detected\n");
-    if(option & CASE_THREE)
+    if(option & GRAY_THREE)
         //printf("Case 3 detected\n");
-    if(option & CASE_FOUR)
+    if(option & GRAY_FOUR)
         //printf("Case 4 detected\n");
-    printf("\n");
-    printAndResult(option);
+    if(option & RGB_BOX)
+        RGB_Box_Filter(Image image);
+    if(option & RGB_TWO)
+        //printf("Case 2 detected\n");
+    if(option & RGB_THREE)
+        //printf("Case 3 detected\n");
+    if(option & RGB_FOUR)
+        //printf("Case 4 detected\n");
+    std::cout << endl;
 }
 
-int main(){
-    //test1:
-    uint8_t option = 0b00001001;
-    printf("test1:\n");
-    loadCase(option);
-
-    //test2:
-    printf("test2:\n");
-    loadCase(CASE_ONE | CASE_TWO);
-
-    //test3:
-    printf("test3:\n");
-    loadCase(CASE_ONE | CASE_TWO | CASE_THREE | CASE_FOUR);
-    return 0;
-}*/
+#endif

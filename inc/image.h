@@ -20,6 +20,7 @@ class Image{
       virtual void Display_CMD();
       int get_width();
       int get_height();
+      virtual int **get_pixels(); //為了給filter使用pixels。需在報告註明
 };
 
 #endif

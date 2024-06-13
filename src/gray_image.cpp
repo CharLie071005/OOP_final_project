@@ -32,3 +32,6 @@ void GrayImage::Display_ASCII(){
 void GrayImage::Display_CMD(){
     data_loader.Display_Gray_CMD(loadfilename);
 }
+int **GrayImage::get_pixels(){
+    return pixels;
+}
