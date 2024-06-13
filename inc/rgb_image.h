@@ -14,7 +14,7 @@ public:
     void Display_X_Server();
     void Display_ASCII();
     void Display_CMD();
-    int ***get_pixels();
+    int ***get_3D_pixels();
 
 };
 

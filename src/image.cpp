@@ -33,5 +33,5 @@ int Image::get_height(){
     return height;
 }
 int **Image::get_pixels(){
-    
+    return 0;
 }

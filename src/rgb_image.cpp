@@ -1,10 +1,6 @@
 #include "rgb_image.h"
 
 RGBImage::RGBImage(){
-<<<<<<< HEAD
-=======
-
->>>>>>> cb1561ebce1ec320d5394905966d7d6815604289
 }
 
 RGBImage::~RGBImage(){
@@ -40,6 +36,6 @@ void RGBImage::Display_ASCII(){
 void RGBImage::Display_CMD(){
     data_loader.Display_RGB_CMD(loadfilename);
 }
-int ***RGBImage::get_pixels(){
+int ***RGBImage::get_3D_pixels(){
     return pixels;
 }
