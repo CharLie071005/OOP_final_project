@@ -17,6 +17,7 @@ bool GrayImage::LoadImage(string filename){
 }
 
 void GrayImage::DumpImage(string filename){
+    loadfilename = filename;
     data_loader.Dump_Gray(width, height, pixels, filename);
 }
 

@@ -3,7 +3,7 @@
 void loadCase(int8_t option, Image *image){
     if(option & GRAY_BOX){
         std::cout << endl << endl << "Load Gray Box" << endl << endl;
-        Gray_Box_Filter(image, 3);
+        Gray_Box_Filter(image, 5);
     }
     if(option & GRAY_TWO){
         std::cout << endl << endl << "Load Gray TWO" << endl << endl;
@@ -11,7 +11,7 @@ void loadCase(int8_t option, Image *image){
     }    
     if(option & GRAY_THREE){
         std::cout << endl << endl << "Load Gray Three" << endl << endl;
-        Sobel_gradient_Filter_Gray(image);
+        Sobel_Gradient_Filter_Gray(image);
     }
     if(option & GRAY_FOUR){
         std::cout << endl << endl << "Load Gray Four" << endl << endl;
@@ -19,7 +19,7 @@ void loadCase(int8_t option, Image *image){
     }
     if(option & RGB_BOX){
         std::cout << endl << endl << "Load RGB Box" << endl << endl;
-        RGB_Box_Filter(image, 10);
+        RGB_Box_Filter(image, 5);
     }
     if(option & RGB_TWO){
         //printf("Case 2 detected\n");
@@ -30,18 +30,11 @@ void loadCase(int8_t option, Image *image){
         //printf("Case 4 detected\n");
     std::cout << endl;
 }
-<<<<<<< HEAD
-void Gray_Box_Filter(Image &image, int kernelSize){
-    int _h = image.get_height();
-    int _w = image.get_width();
-    int **_pixels = image.get_pixels(); 
-=======
 
 void Gray_Box_Filter(Image *image, int kernelSize){
     int _h = image->get_height();
     int _w = image->get_width();
     int **_pixels = image->get_pixels(); 
->>>>>>> 906d3e30302efdbb5ebd21c77a7cea5826b13352
     
     int **tmp_pixels = new int*[_h];
     for (int i=0 ; i < _h; i++){
@@ -184,13 +177,13 @@ void Median_Filter_Gray(Image *image, int kernel) {
 
 void Sobel_Gradient_Filter_Gray(Image *image) {
 
-    int Gx[3][3] = {
+    int GX[3][3] = {
     { 1, 0, -1 },
     { 2, 0, -2 },
     { 1, 0, -1 }
     };
 
-    int Gy[3][3] = {
+    int GY[3][3] = {
     { 1,  2,  1 },
     { 0,  0,  0 },
     { -1, -2, -1 }
@@ -200,54 +193,46 @@ void Sobel_Gradient_Filter_Gray(Image *image) {
     int _w = image->get_width();
     int **_pixels = image->get_pixels();
 
-    int **gradient = new int*[_h];
+    int **filtered_pixels = new int*[_h];
     for (int i = 0; i < _h; i++) {
-        gradient[i] = new int[_w];
+        filtered_pixels[i] = new int[_w];
     }
 
     for (int y = 1; y < _h - 1; y++) {
         for (int x = 1; x < _w - 1; x++) {
-            int gx = 0;
-            int gy = 0;
+            int sumX = 0;
+            int sumY = 0;
 
             for (int ky = -1; ky <= 1; ky++) {
                 for (int kx = -1; kx <= 1; kx++) {
-                    gx += _pixels[y + ky][x + kx] * Gx[ky + 1][kx + 1];
-                    gy += _pixels[y + ky][x + kx] * Gy[ky + 1][kx + 1];
+                    sumX += _pixels[y + ky][x + kx] * GX[ky + 1][kx + 1];
+                    sumY += _pixels[y + ky][x + kx] * GY[ky + 1][kx + 1];
                 }
             }
 
-            gradient[y][x] = sqrt(gx * gx + gy * gy);
+            int magnitude = static_cast<int>(sqrt(sumX * sumX + sumY * sumY));
+            filtered_pixels[y][x] = std::min(255, std::max(0, magnitude));
         }
     }
 
     for (int y = 1; y < _h - 1; y++) {
         for (int x = 1; x < _w - 1; x++) {
-            _pixels[y][x] = gradient[y][x];
+            _pixels[y][x] = filtered_pixels[y][x];
         }
     }
 
     for (int i = 0; i < _h; i++) {
-        delete[] gradient[i];
+        delete[] filtered_pixels[i];
     }
-    delete[] gradient;
+    delete[] filtered_pixels;
 }
 
-<<<<<<< HEAD
-void Linear_Motion_Blur(Image &image, double angle, int kernel_size) {
-    int width = image.get_width();
-    int height = image.get_height();
-    int **pixels = image.get_pixels();
-
-    // Generate motion blur kernel
-=======
 void Linear_Motion_Blur_Gray(Image *image, double angle, int kernel_size) {
     int width = image->get_width();
     int height = image->get_height();
     int **pixels = image->get_pixels();
 
     // 建立長度為kernel每個數值皆為kernel分之一的模糊矩陣
->>>>>>> 906d3e30302efdbb5ebd21c77a7cea5826b13352
     std::vector<double> kernel(kernel_size, 1.0 / kernel_size); // Simple averaging kernel
 
     // Compute motion direction components
