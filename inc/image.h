@@ -20,7 +20,9 @@ class Image{
       virtual void Display_CMD();
       int get_width();
       int get_height();
-      virtual int **get_pixels(); //���F��filter�ϥ�pixels�C�ݦb���i����
+      virtual int **get_pixels(); 
+      virtual int ***get_3D_pixels(); 
+      virtual void showPixels();
 };
 
 #endif

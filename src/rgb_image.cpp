@@ -39,3 +39,12 @@ void RGBImage::Display_CMD(){
 int ***RGBImage::get_3D_pixels(){
     return pixels;
 }
+void RGBImage::showPixels(){
+    for (int y=0; y < height; ++y){
+        for (int x=0; x < width; ++x){
+            cout << pixels[y][x][0] << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+}

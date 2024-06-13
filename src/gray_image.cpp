@@ -34,3 +34,13 @@ void GrayImage::Display_CMD(){
 int **GrayImage::get_pixels(){
     return pixels;
 }
+
+void GrayImage::showPixels(){
+    for (int y=0; y < height; ++y){
+        for (int x=0; x < width; ++x){
+            cout << pixels[y][x] << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
