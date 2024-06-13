@@ -21,9 +21,6 @@ int main(int argc, char *argv[]){
 
     // some bit field filter design driven code here
 
-    img2->Display_ASCII();
-    img2->Display_CMD();
-
     // some bit field filter design driven code here
     
     // some photo mosaic driven code here
