@@ -19,7 +19,8 @@
 
 void Gray_Box_Filter(Image &image, int kernelSize);
 void RGB_Box_Filter(Image &image, int kernelSize);
-
+void Median_Filter_Gray(Image &image);
+void Sobel_gradient_Filter_Gray(Image &image);
 //using bitwise and to track whtat is the user's image
 void loadCase(int8_t option, Image &image);
 
