@@ -15,6 +15,7 @@ public:
     void Display_ASCII();
     void Display_CMD();
     int **get_pixels(); //���F��filter�ϥ�pixels
+    void showPixels();
 };
 
 #endif

@@ -35,3 +35,9 @@ int Image::get_height(){
 int **Image::get_pixels(){
     return 0;
 }
+int ***Image::get_3D_pixels(){
+    return 0;
+}
+void Image::showPixels(){
+    //
+}
