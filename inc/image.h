@@ -9,7 +9,7 @@ class Image{
       int width;
       int height;
       static Data_Loader data_loader;
-      string loadfilename; //³]©wÅÜ¼Æ¥H°O¿ýÅª¨úªºÀÉ®×¦WºÙ¡A¥D­n¬Oµ¹Display_CMD¨Ï¥Î¡A¶·µù©ú¦b³ø§i
+      string loadfilename; //ï¿½]ï¿½wï¿½Ü¼Æ¥Hï¿½Oï¿½ï¿½Åªï¿½ï¿½ï¿½ï¿½ï¿½É®×¦Wï¿½Ù¡Aï¿½Dï¿½nï¿½Oï¿½ï¿½Display_CMDï¿½Ï¥Î¡Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bï¿½ï¿½ï¿½i
   public:
       Image();
       ~Image();
@@ -20,7 +20,7 @@ class Image{
       virtual void Display_CMD();
       int get_width();
       int get_height();
-      virtual int **get_pixels(); //¬°¤Fµ¹filter¨Ï¥Îpixels¡C»Ý¦b³ø§iµù©ú
+      virtual int **get_pixels(); //ï¿½ï¿½ï¿½Fï¿½ï¿½filterï¿½Ï¥ï¿½pixelsï¿½Cï¿½Ý¦bï¿½ï¿½ï¿½iï¿½ï¿½ï¿½ï¿½
 };
 
 #endif

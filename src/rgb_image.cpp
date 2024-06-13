@@ -1,7 +1,10 @@
 #include "rgb_image.h"
 
 RGBImage::RGBImage(){
+<<<<<<< HEAD
+=======
 
+>>>>>>> cb1561ebce1ec320d5394905966d7d6815604289
 }
 
 RGBImage::~RGBImage(){

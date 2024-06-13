@@ -14,7 +14,7 @@ public:
     void Display_X_Server();
     void Display_ASCII();
     void Display_CMD();
-    int **get_pixels(); //¬°¤Fµ¹filter¨Ï¥Îpixels
+    int **get_pixels(); //ï¿½ï¿½ï¿½Fï¿½ï¿½filterï¿½Ï¥ï¿½pixels
 };
 
 #endif

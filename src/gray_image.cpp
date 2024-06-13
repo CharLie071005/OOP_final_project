@@ -1,7 +1,10 @@
 #include "gray_image.h"
 
 GrayImage::GrayImage(){
+<<<<<<< HEAD
+=======
 
+>>>>>>> cb1561ebce1ec320d5394905966d7d6815604289
 }
 
 GrayImage::~GrayImage(){
