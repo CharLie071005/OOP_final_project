@@ -1,6 +1,10 @@
 #include "gray_image.h"
 
 GrayImage::GrayImage(){
+<<<<<<< HEAD
+=======
+
+>>>>>>> cb1561ebce1ec320d5394905966d7d6815604289
 }
 
 GrayImage::~GrayImage(){
@@ -30,4 +34,7 @@ void GrayImage::Display_ASCII(){
 
 void GrayImage::Display_CMD(){
     data_loader.Display_Gray_CMD(loadfilename);
+}
+int **GrayImage::get_pixels(){
+    return pixels;
 }

@@ -1,5 +1,5 @@
-#ifndef RGB_IMAGE_H
-#define RGB_IMAGE_H
+#ifndef _RGB_IMAGE_H_
+#define _RGB_IMAGE_H_
 
 #include "image.h"
 
@@ -9,11 +9,12 @@ private:
 public:
     RGBImage();
     ~RGBImage();
-    bool LoadImage(string filename) override;
-    void DumpImage(string filename) override;
-    void Display_X_Server() override;
-    void Display_ASCII() override;
-    void Display_CMD() override;
+    bool LoadImage(string filename);
+    void DumpImage(string filename);
+    void Display_X_Server();
+    void Display_ASCII();
+    void Display_CMD();
+    int ***get_pixels();
 
 };
 

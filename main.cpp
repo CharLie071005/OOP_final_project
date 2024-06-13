@@ -9,6 +9,10 @@ int main(int argc, char *argv[]){
     img1->LoadImage("Image-Folder/mnist/img_100.jpg");
     img1->DumpImage("img1.jpg");
     img1->Display_X_Server();
+<<<<<<< HEAD
+=======
+    img1->Display_ASCII();
+>>>>>>> cb1561ebce1ec320d5394905966d7d6815604289
     img1->Display_CMD();
     
 
@@ -16,10 +20,18 @@ int main(int argc, char *argv[]){
     img2->LoadImage("Image-Folder/lena.jpg");
     img2->DumpImage("img2.jpg");
     img2->Display_X_Server();
+<<<<<<< HEAD
     img2->Display_CMD();
 
     // some bit field filter design driven code here
 
+=======
+    img2->Display_ASCII();
+    img2->Display_CMD();
+
+    // some bit field filter design driven code here
+    
+>>>>>>> cb1561ebce1ec320d5394905966d7d6815604289
     // some photo mosaic driven code here
 
     // more ...

@@ -31,3 +31,6 @@ int Image::get_width(){
 int Image::get_height(){
     return height;
 }
+int **Image::get_pixels(){
+    
+}
