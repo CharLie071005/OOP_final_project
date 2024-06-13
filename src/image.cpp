@@ -26,6 +26,7 @@ void Image::Display_CMD(){
 
 int Image::get_width(){
     return width;
+    //test
 }
 
 int Image::get_height(){
