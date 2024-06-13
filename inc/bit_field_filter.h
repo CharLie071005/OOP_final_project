@@ -17,30 +17,11 @@
 #define RGB_THREE   0b01000000
 #define RGB_FOUR    0b10000000
 
-void Gray_Box_Filter(Image &image);
-void RGB_Box_Filter(Image &image);
+void Gray_Box_Filter(Image &image, int kernelSize);
+void RGB_Box_Filter(Image &image, int kernelSize);
 void Median_Filter_Gray(Image &image);
-void Sobel_gradient_Filter(Image &image);
-
-//using bitwise and to track whtat is the user's option
-void loadCase(int8_t Opt, Image &image){
-    if(Opt & GRAY_BOX)
-        Gray_Box_Filter(image);
-    if(Opt & GRAY_TWO)
-        Median_Filter_Gray(image);
-    if(Opt & GRAY_THREE)
-        Sobel_gradient_Filter_Gray(image);
-    if(Opt & GRAY_FOUR)
-        //printf("Case 4 detected\n");
-    if(Opt & RGB_BOX)
-        RGB_Box_Filter(image);
-    if(Opt & RGB_TWO)
-        //printf("Case 2 detected\n");
-    if(Opt & RGB_THREE)
-        //printf("Case 3 detected\n");
-    if(Opt & RGB_FOUR)
-        //printf("Case 4 detected\n");
-    std::cout << endl;
-}
+void Sobel_gradient_Filter_Gray(Image &image);
+//using bitwise and to track whtat is the user's image
+void loadCase(int8_t option, Image &image);
 
 #endif

@@ -17,8 +17,9 @@ int main(int argc, char *argv[]){
     img2->LoadImage("Image-Folder/lena.jpg");
     img2->DumpImage("img2.jpg");
     img2->Display_X_Server();
-    img2->Display_ASCII();
     img2->Display_CMD();
+
+    // some bit field filter design driven code here
 
     // some bit field filter design driven code here
     
