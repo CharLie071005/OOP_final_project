@@ -1,0 +1,6 @@
+third-party/*
+*.jpg
+*.png
+obj/*.o
+obj/*.d
+Image_Processing
