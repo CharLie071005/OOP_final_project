@@ -22,6 +22,7 @@ bool RGBImage::LoadImage(string filename){
 }
 
 void RGBImage::DumpImage(string filename){
+    loadfilename = filename;
     data_loader.Dump_RGB(width, height, pixels, filename);
 }
 
