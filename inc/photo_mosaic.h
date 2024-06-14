@@ -19,9 +19,9 @@ class PhotoMosaic{
         Image *InputImage(string BigPhotoName, string Mnist_Folder);
         //void SplitPhoto();
         std::array<int, 3> CalculateAverage(Image *image);
-        void Matching();
-        void Generate_Mosaic();
-
+        int getBestMatchIndex(Image avg, vector<Image>& avgs);
+        int ***createImageGrid(const vector<int ***>& images, int subWidth, int subHeight, int width, int height);
+        vector<int ***> splitImage(int ***pixels, int width, int height, int subWidth, int subHeight);
 
 };
 

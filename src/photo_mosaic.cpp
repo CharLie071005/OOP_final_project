@@ -44,11 +44,60 @@ Image *PhotoMosaic::InputImage(string BigPhotoName, string Mnist_Folder){
 
 }
 
-void PhotoMosaic::Matching(){
-
+int PhotoMosaic::getBestMatchIndex(Image avg, vector<Image>& avgs){
+    int bestIndex = 0;
+    double minDist = numeric_limits<double>::max();
+    for (size_t i = 0; i < avgs.size(); i++) {
+        double dist = pow(avg[0] - avgs[i][0], 2) + pow(avg[1] - avgs[i][1], 2) + pow(avg[2] - avgs[i][2], 2);
+        if (dist < minDist) {
+            minDist = dist;
+            bestIndex = i;
+        }
+    }
+    return bestIndex;
 }
 
 
-void PhotoMosaic::Generate_Mosaic(){
-     
+int ***PhotoMosaic::createImageGrid(const vector<int ***>& images, int subWidth, int subHeight, int width, int height) {
+    int ***grid = new int **[height];
+    for (int i = 0; i < height; i++) {
+        grid[i] = new int *[width];
+        for (int j = 0; j < width; j++) {
+            grid[i][j] = new int[3];
+        }
+    }
+
+    for (int y = 0; y < width / subWidth; y++) {
+        for (int x = 0; x < height / subHeight; x++) {
+            int ***subImage = images[y * width / subWidth + x];
+            for (int i = 0; i < subHeight; i++) {
+                for (int j = 0; j < subWidth; j++) {
+                    grid[y * subHeight + i][x * subWidth + j][0] = subImage[i][j][0];
+                    grid[y * subHeight + i][x * subWidth + j][1] = subImage[i][j][1];
+                    grid[y * subHeight + i][x * subWidth + j][2] = subImage[i][j][2];
+                }
+            }
+        }
+    }
+    return grid;
+}
+
+vector<int ***> PhotoMosaic::splitImage(int ***pixels, int width, int height, int subWidth, int subHeight) {
+    vector<int ***> subImages;
+    for (int y = 0; y < height / subHeight; y++) {
+        for (int x = 0; x < width / subWidth; x++) {
+            int ***subImage = new int **[subHeight];
+            for (int i = 0; i < subHeight; i++) {
+                subImage[i] = new int *[subWidth];
+                for (int j = 0; j < subWidth; j++) {
+                    subImage[i][j] = new int[3];
+                    subImage[i][j][0] = pixels[y * subHeight + i][x * subWidth + j][0];
+                    subImage[i][j][1] = pixels[y * subHeight + i][x * subWidth + j][1];
+                    subImage[i][j][2] = pixels[y * subHeight + i][x * subWidth + j][2];
+                }
+            }
+            subImages.push_back(subImage);
+        }
+    }
+    return subImages;
 }
