@@ -24,6 +24,7 @@ void Median_Filter_Gray(Image *image, int kernel);
 void Median_Filter_RGB(Image *image, int kernel);
 void Sobel_Gradient_Filter_Gray(Image *image);
 void Linear_Motion_Blur_Gray(Image *image, double angle, int kernel_size);
+void Linear_Motion_Blur_RGB(Image *image, double angle, int kernel_size);
 //using bitwise and to track whtat is the user's image
 void loadCase(int8_t option, Image *image);
 

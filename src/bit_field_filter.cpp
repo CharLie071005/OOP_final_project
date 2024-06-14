@@ -15,7 +15,7 @@ void loadCase(int8_t option, Image *image){
     }
     if(option & GRAY_FOUR){
         std::cout << endl << endl << "Load Gray Four" << endl << endl;
-        Linear_Motion_Blur_Gray(image, 0.0, 5);
+        Linear_Motion_Blur_Gray(image, 0.0, 10);
     }
     if(option & RGB_BOX){
         std::cout << endl << endl << "Load RGB Box" << endl << endl;
@@ -25,10 +25,13 @@ void loadCase(int8_t option, Image *image){
         std::cout << endl << endl << "Load RGB Two" << endl << endl;
         Median_Filter_RGB(image, 3);
     }
-    if(option & RGB_THREE)
+    if(option & RGB_THREE){
         //printf("Case 3 detected\n");
-    if(option & RGB_FOUR)
-        //printf("Case 4 detected\n");
+    }
+    if(option & RGB_FOUR){
+        std::cout << endl << endl << "Load RGB Four" << endl << endl;
+        Linear_Motion_Blur_RGB(image, 0.0, 10);
+    }
     std::cout << endl;
 }
 
@@ -320,6 +323,42 @@ void Linear_Motion_Blur_Gray(Image *image, double angle, int kernel_size) {
                 }
             }
             pixels[y][x] = round(sum);
+        }
+    }
+}
+
+void Linear_Motion_Blur_RGB(Image *image, double angle, int kernel_size) {
+    int width = image->get_width();
+    int height = image->get_height();
+    int ***pixels = image->get_3D_pixels();
+
+    // 建立長度為kernel每個數值皆為kernel分之一的模糊矩陣
+    std::vector<double> kernel(kernel_size, 1.0 / kernel_size); // Simple averaging kernel
+
+    // Compute motion direction components
+    double angle_rad = angle * M_PI / 180.0;
+    double dx = cos(angle_rad);
+    double dy = sin(angle_rad);
+
+    // Apply the kernel in the direction specified
+    int half_size = kernel_size / 2;
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            double sumR = 0.0;
+            double sumG = 0.0;
+            double sumB = 0.0;
+            for (int k = -half_size; k <= half_size; k++) {
+                int new_x = x + round(k * dx);
+                int new_y = y + round(k * dy);
+                if (new_x >= 0 && new_x < width && new_y >= 0 && new_y < height) {
+                    sumR += kernel[k + half_size] * pixels[new_y][new_x][0];
+                    sumG += kernel[k + half_size] * pixels[new_y][new_x][1];
+                    sumB += kernel[k + half_size] * pixels[new_y][new_x][2];
+                }
+            }
+            pixels[y][x][0] = round(sumR);
+            pixels[y][x][1] = round(sumG);
+            pixels[y][x][2] = round(sumB);
         }
     }
 }

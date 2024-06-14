@@ -4,7 +4,7 @@
 #include "photo_mosaic.h"
 #include "bit_field_filter.h"
 
-#define option 0b00100000
+#define option 0b10000000
 
 
 int main(int argc, char *argv[]){
