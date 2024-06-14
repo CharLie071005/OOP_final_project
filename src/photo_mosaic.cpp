@@ -4,10 +4,10 @@ PhotoMosaic::PhotoMosaic(){};
 
 PhotoMosaic::~PhotoMosaic(){};
 
-std::array<int, 3> PhotoMosaic::CalculateAverage(Image *image) {
+int ***PhotoMosaic::CalculateAverage(Image image) {
     int sumR = 0, sumG = 0, sumB = 0, count = 0;
-    int _h = image->get_height(), _w = image->get_width();
-    int ***_pixels = image->get_3D_pixels(); 
+    int _h = image.get_height(), _w = image.get_width();
+    int ***_pixels = image.get_3D_pixels(); 
 
     for (int y = 0; y < _h; ++y) {
         for (int x = 0; x < _w; ++x) {
@@ -20,8 +20,14 @@ std::array<int, 3> PhotoMosaic::CalculateAverage(Image *image) {
     int avgR = sumR / count;
     int avgG = sumG / count;
     int avgB = sumB / count;
-                               //return array that store the average
-    return {avgR, avgG, avgB}; //values of R,G,B of mnist
+    for (int i=0; i < _h; ++i){
+        for (int j=0; j < _w; ++j){
+            _pixels[i][j][0] = avgR;
+            _pixels[i][j][1] = avgG;
+            _pixels[i][j][2] = avgB;
+        }
+    }
+    return _pixels;
 }
 
 
@@ -35,17 +41,18 @@ Image *PhotoMosaic::InputImage(string BigPhotoName, string Mnist_Folder){
     image.List_Name_Directory(Mnist_Folder, small_name);
     //Load every mnists and calculate the average value of every channel
     for (auto name : small_name ){
-        Image *mni = new RGBImage();
-        mni->LoadImage(name);
+        Image mni;
+        mni.LoadImage(name);
         small_avg.push_back(CalculateAverage(mni));
-        small_image.push_back(*mni);
+        small_image.push_back(mni);
     }
     return img1;
 
 }
 
-int PhotoMosaic::getBestMatchIndex(Image avg, vector<Image>& avgs){
+int PhotoMosaic::getBestMatchIndex(Image image, vector<int***>& avgs){
     int bestIndex = 0;
+    int ***avg = image.get_3D_pixels();
     double minDist = numeric_limits<double>::max();
     for (size_t i = 0; i < avgs.size(); i++) {
         double dist = pow(avg[0] - avgs[i][0], 2) + pow(avg[1] - avgs[i][1], 2) + pow(avg[2] - avgs[i][2], 2);
@@ -82,6 +89,7 @@ int ***PhotoMosaic::createImageGrid(const vector<int ***>& images, int subWidth,
     return grid;
 }
 
+
 vector<int ***> PhotoMosaic::splitImage(int ***pixels, int width, int height, int subWidth, int subHeight) {
     vector<int ***> subImages;
     for (int y = 0; y < height / subHeight; y++) {
@@ -100,4 +108,9 @@ vector<int ***> PhotoMosaic::splitImage(int ***pixels, int width, int height, in
         }
     }
     return subImages;
+}
+
+
+void PhotoMosaic::Generate_Mosaic(){
+
 }
