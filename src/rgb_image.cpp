@@ -22,6 +22,8 @@ bool RGBImage::LoadImage(string filename){
 }
 
 void RGBImage::DumpImage(string filename){
+    loadfilename = filename;
+    std::cout << "Implement Dump_RGB" << endl;
     data_loader.Dump_RGB(width, height, pixels, filename);
 }
 

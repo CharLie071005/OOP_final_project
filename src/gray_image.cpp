@@ -18,6 +18,7 @@ bool GrayImage::LoadImage(string filename){
 
 void GrayImage::DumpImage(string filename){
     loadfilename = filename;
+    std::cout << "Implement Dump_Gray " << endl;
     data_loader.Dump_Gray(width, height, pixels, filename);
 }
 

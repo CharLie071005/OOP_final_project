@@ -228,12 +228,14 @@ void Data_Loader::Display_RGB_ASCII(int w, int h, int ***pixels){
 }
 
 void Data_Loader::Display_Gray_CMD(string filename){
+    std::cout << "Implement Gray CMD" << endl;
     assert(File_Exists(filename));
     string cmd = "./third-party/catimg/bin/catimg " + string(filename);
     system(cmd.c_str());
 }
 
 void Data_Loader::Display_RGB_CMD(string filename){
+    std::cout << "Implement RGB CMD" << endl;
     assert(File_Exists(filename));
     string cmd = "./third-party/catimg/bin/catimg " + string(filename);
     system(cmd.c_str());

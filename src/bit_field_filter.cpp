@@ -5,30 +5,33 @@ void loadCase(int8_t option, Image *image){
         std::cout << endl << endl << "Load Gray Box" << endl << endl;
         Gray_Box_Filter(image, 5);
     }
-    if(option & GRAY_TWO){
-        std::cout << endl << endl << "Load Gray TWO" << endl << endl;
+    if(option & GRAY_Med){
+        std::cout << endl << endl << "Load Gray Median" << endl << endl;
         Median_Filter_Gray(image, 3);
     }    
-    if(option & GRAY_THREE){
-        std::cout << endl << endl << "Load Gray Three" << endl << endl;
+    if(option & GRAY_Sobel){
+        std::cout << endl << endl << "Load Gray Sobel" << endl << endl;
         Sobel_Gradient_Filter_Gray(image);
     }
-    if(option & GRAY_FOUR){
-        std::cout << endl << endl << "Load Gray Four" << endl << endl;
+    if(option & GRAY_Linear){
+        std::cout << endl << endl << "Load Gray Linear" << endl << endl;
         Linear_Motion_Blur_Gray(image, 90.0, 5);
     }
     if(option & RGB_BOX){
         std::cout << endl << endl << "Load RGB Box" << endl << endl;
         RGB_Box_Filter(image, 5);
     }
-    if(option & RGB_TWO){
-        //printf("Case 2 detected\n");
+    if(option & RGB_Med){
+        std::cout << endl << endl << "Load RGB Median" << endl << endl;
     }
-    if(option & RGB_THREE)
-        //printf("Case 3 detected\n");
-    if(option & RGB_FOUR)
-        //printf("Case 4 detected\n");
+    if(option & RGB_Sobel){
+        std::cout << endl << endl << "Load RGB Sobel" << endl << endl;
+        Sobel_Gradient_Filter_RGB(image);
+    }
+    if(option & RGB_Linear){
+        std::cout << endl << endl << "Load RGB Linear" << endl << endl;
     std::cout << endl;
+    }
 }
 
 void Gray_Box_Filter(Image *image, int kernelSize){
@@ -96,8 +99,8 @@ void RGB_Box_Filter(Image *image, int kernelSize){
                     int nx = x + K_x;
                     if (ny >= 0 && ny < _h && nx >= 0 && nx < _w) {
                         sumR += _pixels[ny][nx][0];
-                        sumG += _pixels[ny][nx][0];
-                        sumB += _pixels[ny][nx][0];
+                        sumG += _pixels[ny][nx][1];
+                        sumB += _pixels[ny][nx][2];
                         ++count;
                     }
                 }
@@ -110,7 +113,7 @@ void RGB_Box_Filter(Image *image, int kernelSize){
     for (int y=0; y < _h; ++y){
         for (int x=0; x < _w; ++x){
             for (int i=0; i<3; ++i){
-            _pixels[y][x][i] = tmp_pixels[y][x][i];
+                _pixels[y][x][i] = tmp_pixels[y][x][i];
             }
         }
     }
@@ -138,22 +141,22 @@ void Median_Filter_Gray(Image *image, int kernel) {
         filtered_pixels[i] = new int[_w];
     }
 
-    // 遍历图像的每一个像素（忽略边缘像素）
+    // 搜尋圖片的每一个像素（忽略邊界）
     for (int y = border; y < _h - border; y++) {
         for (int x = border; x < _w - border; x++) {
             vector<int> window;
             
-            // 获取3x3窗口的像素值
+            // 取得3x3的濾鏡矩陣
             for (int ky = -border; ky <= border; ky++) {
                 for (int kx = -border; kx <= border; kx++) {
                     window.push_back(_pixels[y + ky][x + kx]);
                 }
             }
 
-            // 对窗口中的像素值进行排序
+            // 對濾鏡矩陣中的像素進行排列
             sort(window.begin(), window.end());
 
-            // 获取中位数
+            // 取得中位數
             int median = window[window.size() / 2];
 
             // 将中位数赋值给滤波后的图像
@@ -161,14 +164,14 @@ void Median_Filter_Gray(Image *image, int kernel) {
         }
     }
 
-    // 将滤波结果复制回原图像
+    //將套完濾鏡的pixels複製到_pixels上
     for (int y = 1; y < _h - 1; y++) {
         for (int x = 1; x < _w - 1; x++) {
             _pixels[y][x] = filtered_pixels[y][x];
         }
     }
 
-    // 释放分配的内存
+    //刪除記憶體空間
     for (int i = 0; i < _h; i++) {
         delete[] filtered_pixels[i];
     }
@@ -176,13 +179,13 @@ void Median_Filter_Gray(Image *image, int kernel) {
 }
 
 void Sobel_Gradient_Filter_Gray(Image *image) {
-
+    //確定是否水平的矩陣
     int GX[3][3] = {
     { 1, 0, -1 },
     { 2, 0, -2 },
     { 1, 0, -1 }
     };
-
+    //確定是否垂直的矩陣
     int GY[3][3] = {
     { 1,  2,  1 },
     { 0,  0,  0 },
@@ -203,28 +206,102 @@ void Sobel_Gradient_Filter_Gray(Image *image) {
             int sumX = 0;
             int sumY = 0;
 
-            for (int ky = -1; ky <= 1; ky++) {
+            for (int ky = -1; ky <= 1; ky++) { //把pixels做卷積
                 for (int kx = -1; kx <= 1; kx++) {
                     sumX += _pixels[y + ky][x + kx] * GX[ky + 1][kx + 1];
                     sumY += _pixels[y + ky][x + kx] * GY[ky + 1][kx + 1];
                 }
             }
-
+            
             int magnitude = static_cast<int>(sqrt(sumX * sumX + sumY * sumY));
             filtered_pixels[y][x] = std::min(255, std::max(0, magnitude));
         }
     }
-
+    //把更新的liftered_pixels更新到_pixels
     for (int y = 1; y < _h - 1; y++) {
         for (int x = 1; x < _w - 1; x++) {
             _pixels[y][x] = filtered_pixels[y][x];
         }
     }
-
+    //釋放記憶體空間
     for (int i = 0; i < _h; i++) {
         delete[] filtered_pixels[i];
     }
     delete[] filtered_pixels;
+}
+
+void Sobel_Gradient_Filter_RGB(Image *image) {
+    //確定是否水平的矩陣
+    int GX[3][3] = {
+    { 1, 0, -1 },
+    { 2, 0, -2 },
+    { 1, 0, -1 }
+    };
+    //確定是否垂直的矩陣
+    int GY[3][3] = {
+    { 1,  2,  1 },
+    { 0,  0,  0 },
+    { -1, -2, -1 }
+    };
+
+    int _h = image->get_height();
+    int _w = image->get_width();
+    int ***_pixels = image->get_3D_pixels();
+
+    int ***filtered_pixels = new int **[_h];
+    for (int i = 0; i < _h; i++) {
+        filtered_pixels[i] = new int *[_w];
+        for (int j = 0; j < _w; j++){
+            filtered_pixels[i][j] = new int [3];
+        }
+    }
+
+    for (int y = 1; y < _h - 1; y++) {
+        for (int x = 1; x < _w - 1; x++) {
+            int sumX_R = 0;
+            int sumY_R = 0;
+            int sumX_G = 0;
+            int sumY_G = 0;
+            int sumX_B = 0;
+            int sumY_B = 0;
+
+            for (int ky = -1; ky <= 1; ky++) { //把pixels做卷積
+                for (int kx = -1; kx <= 1; kx++) {
+                    sumX_R += _pixels[y + ky][x + kx][0] * GX[ky + 1][kx + 1];
+                    sumY_R += _pixels[y + ky][x + kx][0] * GY[ky + 1][kx + 1];
+                    sumX_G += _pixels[y + ky][x + kx][1] * GX[ky + 1][kx + 1];
+                    sumY_G += _pixels[y + ky][x + kx][1] * GY[ky + 1][kx + 1];
+                    sumX_B += _pixels[y + ky][x + kx][2] * GX[ky + 1][kx + 1];
+                    sumY_B += _pixels[y + ky][x + kx][2] * GY[ky + 1][kx + 1];
+                    
+                }
+            }
+            
+            int magnitude_R = static_cast<int>(sqrt(sumX_R * sumX_R + sumY_R * sumY_R));
+            int magnitude_G = static_cast<int>(sqrt(sumX_G * sumX_G + sumY_G * sumY_G));
+            int magnitude_B = static_cast<int>(sqrt(sumX_B * sumX_B + sumY_B * sumY_B));
+            filtered_pixels[y][x][0] = std::min(255, std::max(0, magnitude_R));
+            filtered_pixels[y][x][1] = std::min(255, std::max(0, magnitude_G));
+            filtered_pixels[y][x][2] = std::min(255, std::max(0, magnitude_B));
+            std::cout << "Sobel RGB 演算法正確 "  << endl;
+        }
+    }
+    //把更新的liftered_pixels更新到_pixels
+    for (int y = 1; y < _h - 1; y++) {
+        for (int x = 1; x < _w - 1; x++) {
+            _pixels[y][x][0] = filtered_pixels[y][x][0];
+            _pixels[y][x][1] = filtered_pixels[y][x][1];
+            _pixels[y][x][2] = filtered_pixels[y][x][2];
+        }
+    }
+    //釋放記憶體空間
+    for (int i = 0; i < _h; i++) {
+        for (int k = 0; k < _w; k++){
+            delete [] filtered_pixels[i][k];
+        }
+        delete [] filtered_pixels[i];
+    }
+    delete [] filtered_pixels;
 }
 
 void Linear_Motion_Blur_Gray(Image *image, double angle, int kernel_size) {
