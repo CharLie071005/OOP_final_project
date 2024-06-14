@@ -4,8 +4,8 @@
 #include "photo_mosaic.h"
 #include "bit_field_filter.h"
 
-#define option 0b10000000
-
+#define option1 0b00000100
+#define option2 0b01000000
 
 int main(int argc, char *argv[]){
     // Image *img1 = new GrayImage();
@@ -28,15 +28,13 @@ int main(int argc, char *argv[]){
     // img2->Display_ASCII();
     img2->Display_CMD();
 
-    loadCase(option, img2);
+    loadCase(option1, img2);
     img2->DumpImage("imgtest1.jpg");
     img2->Display_X_Server();
     // img2->Display_ASCII();
     img2->Display_CMD();
 
-    // some bit field filter design driven code here
-
-    // some bit field filter design driven code here
+    //// some bit field filter design driven code here
     
     // some photo mosaic driven code here
 
