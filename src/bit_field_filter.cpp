@@ -5,24 +5,41 @@ void loadCase(int8_t option, Image *image){
         std::cout << endl << endl << "Load Gray Box" << endl << endl;
         Gray_Box_Filter(image, 5);
     }
+<<<<<<< HEAD
     if(option & GRAY_Med){
         std::cout << endl << endl << "Load Gray Median" << endl << endl;
+=======
+    if(option & GRAY_TWO){
+        std::cout << endl << endl << "Load Gray Two" << endl << endl;
+>>>>>>> b0c8f8d17babb752b19383fc91a2e6538f821f4a
         Median_Filter_Gray(image, 3);
     }    
     if(option & GRAY_Sobel){
         std::cout << endl << endl << "Load Gray Sobel" << endl << endl;
         Sobel_Gradient_Filter_Gray(image);
     }
+<<<<<<< HEAD
     if(option & GRAY_Linear){
         std::cout << endl << endl << "Load Gray Linear" << endl << endl;
         Linear_Motion_Blur_Gray(image, 90.0, 5);
+=======
+    if(option & GRAY_FOUR){
+        std::cout << endl << endl << "Load Gray Four" << endl << endl;
+        Linear_Motion_Blur_Gray(image, 0.0, 5);
+>>>>>>> b0c8f8d17babb752b19383fc91a2e6538f821f4a
     }
     if(option & RGB_BOX){
         std::cout << endl << endl << "Load RGB Box" << endl << endl;
         RGB_Box_Filter(image, 5);
     }
+<<<<<<< HEAD
     if(option & RGB_Med){
         std::cout << endl << endl << "Load RGB Median" << endl << endl;
+=======
+    if(option & RGB_TWO){
+        std::cout << endl << endl << "Load RGB Two" << endl << endl;
+        Median_Filter_RGB(image, 3);
+>>>>>>> b0c8f8d17babb752b19383fc91a2e6538f821f4a
     }
     if(option & RGB_Sobel){
         std::cout << endl << endl << "Load RGB Sobel" << endl << endl;
@@ -173,6 +190,72 @@ void Median_Filter_Gray(Image *image, int kernel) {
 
     //刪除記憶體空間
     for (int i = 0; i < _h; i++) {
+        delete[] filtered_pixels[i];
+    }
+    delete[] filtered_pixels;
+}
+
+void Median_Filter_RGB(Image *image, int kernel) {
+    int _h = image->get_height();
+    int _w = image->get_width();
+    int border = kernel / 2;
+    int ***_pixels = image->get_3D_pixels();
+    int ***filtered_pixels = new int**[_h];
+
+    for (int i = 0; i < _h; i++) {
+        filtered_pixels[i] = new int*[_w];
+        for (int j = 0; j < _w; j++) {
+            filtered_pixels[i][j] = new int[3];
+        }
+    }
+    
+    // 遍历图像的每一个像素（忽略边缘像素）
+    for (int y = border; y < _h - border; y++) {
+        for (int x = border; x < _w - border; x++) {
+            vector<int> windowR;
+            vector<int> windowG;
+            vector<int> windowB;
+
+            // 获取3x3窗口的像素值
+            for (int ky = -border; ky <= border; ky++) {
+                for (int kx = -border; kx <= border; kx++) {
+                    windowR.push_back(_pixels[y + ky][x + kx][0]);
+                    windowG.push_back(_pixels[y + ky][x + kx][1]);
+                    windowB.push_back(_pixels[y + ky][x + kx][2]);
+                }
+            }
+
+            // 对窗口中的像素值进行排序
+            sort(windowR.begin(), windowR.end());
+            sort(windowG.begin(), windowG.end());
+            sort(windowB.begin(), windowB.end());
+
+            // 获取中位数
+            int medianR = windowR[windowR.size() / 2];
+            int medianG = windowG[windowG.size() / 2];
+            int medianB = windowB[windowB.size() / 2];
+
+            // 将中位数赋值给滤波后的图像
+            filtered_pixels[y][x][0] = medianR;
+            filtered_pixels[y][x][1] = medianG;
+            filtered_pixels[y][x][2] = medianB;
+        }
+    }
+
+    // 将滤波结果复制回原图像
+    for (int y = 1; y < _h - 1; y++) {
+        for (int x = 1; x < _w - 1; x++) {
+            _pixels[y][x][0] = filtered_pixels[y][x][0];
+            _pixels[y][x][1] = filtered_pixels[y][x][1];
+            _pixels[y][x][2] = filtered_pixels[y][x][2];
+        }
+    }
+
+    // 释放分配的内存
+    for (int i = 0; i < _h; i++) {
+        for (int j = 0; j < _w; j++) {
+            delete[] filtered_pixels[i][j];
+        }
         delete[] filtered_pixels[i];
     }
     delete[] filtered_pixels;
