@@ -14,8 +14,6 @@ public:
     void Display_X_Server();
     void Display_ASCII();
     void Display_CMD();
-    int **get_pixels(); //���F��filter�ϥ�pixels
-    void showPixels();
+    int **get_pixels(); //return 2-dimensiolan pixels array
 };
-
 #endif

@@ -1,6 +1,8 @@
 #include "rgb_image.h"
 
-RGBImage::RGBImage(){
+RGBImage::RGBImage() : pixels(nullptr) {
+    width = 0;
+    height = 0;
 }
 
 RGBImage::~RGBImage(){
@@ -23,10 +25,6 @@ bool RGBImage::LoadImage(string filename){
 
 void RGBImage::DumpImage(string filename){
     loadfilename = filename;
-<<<<<<< HEAD
-    std::cout << "Implement Dump_RGB" << endl;
-=======
->>>>>>> b0c8f8d17babb752b19383fc91a2e6538f821f4a
     data_loader.Dump_RGB(width, height, pixels, filename);
 }
 
@@ -40,16 +38,52 @@ void RGBImage::Display_ASCII(){
 
 void RGBImage::Display_CMD(){
     data_loader.Display_RGB_CMD(loadfilename);
+    /*  以下註解區塊目的是刪除產出的圖片檔
+    std::string command = "rm -f ";
+    command += loadfilename;
+    int removeImage = system(command.c_str());
+    if (removeImage == 0){
+        std::cout << "成功刪除圖片" << endl;
+    }*/
 }
 int ***RGBImage::get_3D_pixels(){
     return pixels;
 }
-void RGBImage::showPixels(){
-    for (int y=0; y < height; ++y){
-        for (int x=0; x < width; ++x){
-            cout << pixels[y][x][0] << " ";
+
+RGBImage& RGBImage::operator=(Image image) {
+    if (this != &image) {  //如果不是=自己  ->執行assignment
+        height = image.get_height();
+        width = image.get_width();
+        int ***tmp_pixels = image.get_3D_pixels();
+
+        // 刪除現有的記憶體
+        if (pixels != nullptr) {
+            for (int i = 0; i < height; ++i) {
+                for (int j = 0; j < width; ++j) {
+                    delete[] pixels[i][j];
+                }
+                delete[] pixels[i];
+            }
+            delete[] pixels;
         }
-        cout << endl;
+
+        // 重新分配記憶體
+        pixels = new int**[height];
+        for (int i = 0; i < height; ++i) {
+            pixels[i] = new int*[width];
+            for (int j = 0; j < width; ++j) {
+                pixels[i][j] = new int[3];
+            }
+        }
+
+        //複製pixels值
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                for (int k = 0; k < 3; k++) {
+                    pixels[i][j][k] = tmp_pixels[i][j][k];
+                }
+            }
+        }
     }
-    cout << endl;
+    return *this;
 }

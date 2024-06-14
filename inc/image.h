@@ -9,7 +9,8 @@ class Image{
       int width;
       int height;
       static Data_Loader data_loader;
-      string loadfilename; //�]�w�ܼƥH�O��Ū�����ɮצW�١A�D�n�O��Display_CMD�ϥΡA�������b���i
+      string loadfilename; //storage the filename that LoadImane imput
+                           //mainly used by CMD_Display
   public:
       Image();
       ~Image();
@@ -20,9 +21,9 @@ class Image{
       virtual void Display_CMD();
       int get_width();
       int get_height();
-      virtual int **get_pixels(); 
-      virtual int ***get_3D_pixels(); 
-      virtual void showPixels();
+      virtual int **get_pixels();   //return 2-dimensiolan pixels array
+      virtual int ***get_3D_pixels();  //return 3-dimensiolan pixels array
+      void List_Name_Directory(string Path, vector<string> &filenames);
 };
 
 #endif

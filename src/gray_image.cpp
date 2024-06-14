@@ -2,7 +2,6 @@
 
 GrayImage::GrayImage(){
 }
-
 GrayImage::~GrayImage(){
     for (int i=0; i<height; ++i){
         delete [] pixels[i];
@@ -18,7 +17,6 @@ bool GrayImage::LoadImage(string filename){
 
 void GrayImage::DumpImage(string filename){
     loadfilename = filename;
-    std::cout << "Implement Dump_Gray " << endl;
     data_loader.Dump_Gray(width, height, pixels, filename);
 }
 
@@ -32,17 +30,16 @@ void GrayImage::Display_ASCII(){
 
 void GrayImage::Display_CMD(){
     data_loader.Display_Gray_CMD(loadfilename);
+    /*  以下註解區塊目的是刪除產出的圖片檔
+    std::string command = "rm -f ";
+    command += loadfilename;
+    int removeImage = system(command.c_str());
+    if (removeImage == 0){
+        std::cout << "成功刪除圖片" << endl;
+    }*/
 }
 int **GrayImage::get_pixels(){
     return pixels;
 }
 
-void GrayImage::showPixels(){
-    for (int y=0; y < height; ++y){
-        for (int x=0; x < width; ++x){
-            cout << pixels[y][x] << " ";
-        }
-        cout << endl;
-    }
-    cout << endl;
-}
+

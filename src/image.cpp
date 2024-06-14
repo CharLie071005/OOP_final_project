@@ -38,6 +38,9 @@ int **Image::get_pixels(){
 int ***Image::get_3D_pixels(){
     return 0;
 }
-void Image::showPixels(){
-    //
+void Image::List_Name_Directory(string Path, vector<string> &filenames){
+    bool SetUpName = data_loader.List_Directory(Path, filenames);
+    if (SetUpName != 0 ){
+        std::cout << "List Directory failed " << endl;
+    }
 }

@@ -15,7 +15,7 @@ public:
     void Display_ASCII();
     void Display_CMD();
     int ***get_3D_pixels();
-    void showPixels();
+    RGBImage& operator = (Image image); //overloading
 };
 
 #endif
