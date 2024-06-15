@@ -22,7 +22,6 @@ class PhotoMosaic{
         ~PhotoMosaic();
         Image *InputImage(string BigPhotoName, string Mnist_Folder);
         //Image Processing
-        int*** CalculateAverage(RGBImage image);
         void CalculateAverage(int ***_pixels);
         int getBestMatchIndex(int ***tar, vector<int***>& avgs);
         vector<int ***> splitImage(int ***pixels, int width, int height, int subWidth, int subHeight);
