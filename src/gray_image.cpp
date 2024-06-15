@@ -1,16 +1,26 @@
 #include "gray_image.h"
 
-GrayImage::GrayImage(){
+GrayImage::GrayImage() : pixels(nullptr){
 }
 GrayImage::~GrayImage(){
-    for (int i=0; i<height; ++i){
-        delete [] pixels[i];
+    if (pixels){
+        for (int i=0; i<height; i++){
+            delete [] pixels[i];
+        }
+        delete [] pixels;
+        pixels = nullptr;
     }
-    delete [] pixels;
 }
 
 bool GrayImage::LoadImage(string filename){
     loadfilename = filename;
+    if (pixels){
+        for (int i=0; i<height; ++i){
+            delete [] pixels[i];
+        }
+        delete [] pixels;
+        pixels = nullptr;
+    }
     pixels = data_loader.Load_Gray(filename, &width, &height);
     return true;
 }
@@ -30,7 +40,7 @@ void GrayImage::Display_ASCII(){
 
 void GrayImage::Display_CMD(){
     data_loader.Display_Gray_CMD(loadfilename);
-    /*  以下註解區塊目的是刪除產出的圖片檔
+    /*  the following code is usgin system() to delete the .jpg we generate
     std::string command = "rm -f ";
     command += loadfilename;
     int removeImage = system(command.c_str());

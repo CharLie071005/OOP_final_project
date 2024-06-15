@@ -2,7 +2,23 @@
 #include "rgb_image.h"
 PhotoMosaic::PhotoMosaic(){};
 
-PhotoMosaic::~PhotoMosaic(){};
+PhotoMosaic::~PhotoMosaic(){
+    int subWidth = small_image[0].get_width();
+    int subHeight = small_image[0].get_height();
+    int length = splited_photo.size() - 1;
+    for (int index = length; index >= 0; --index){
+        for (int y =0; y < subHeight; ++y){
+            for (int x =0; x < subWidth; ++x){
+                delete [] splited_photo[index][y][x];
+            }
+        }
+        for (int i =0; i < subHeight; ++i){
+            delete [] splited_photo[index][i];
+        }
+        delete [] splited_photo[index];
+        splited_photo[index] = nullptr;
+    }
+};
 
 int ***PhotoMosaic::CalculateAverage(Image image) {
     int sumR = 0, sumG = 0, sumB = 0, count = 0;
@@ -111,6 +127,17 @@ vector<int ***> PhotoMosaic::splitImage(int ***pixels, int width, int height, in
 }
 
 
-void PhotoMosaic::Generate_Mosaic(){
+RGBImage PhotoMosaic::Generate_Mosaic(){
+    int subHeight = small_image[0].get_height(), subWidth = small_image[0].get_width();
+    int height = image.get_height(), width = image.get_width();
+    RGBImage Mosaic(height, width);
+    int ***m_pixels = Mosaic.get_3D_pixels();
+    m_pixels = new int**[height];
+    for (int i =0; i < height; ++i){
+        m_pixels[height] = new int *[width];
+        for (int j =0; j < width; ++j){
+            m_pixels[i][j] = new int [3];
+        }
+    }
 
 }

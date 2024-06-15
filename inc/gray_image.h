@@ -14,6 +14,8 @@ public:
     void Display_X_Server();
     void Display_ASCII();
     void Display_CMD();
+    
+    //add function
     int **get_pixels(); //return 2-dimensiolan pixels array
 };
 #endif

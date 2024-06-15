@@ -8,25 +8,31 @@
 class PhotoMosaic{
     protected:
         Image image;
-        //讀取檔案
-        vector<string> small_name;  //儲存小圖名字
-        vector<Image> small_image;  //儲存名字對應的Image
-        vector<int ***> small_avg;      //儲存對應minst的平均值
-        vector<Image> splited_photo; //分割後的大圖
+        // store the Load image
+        vector<string> small_name;  //store small image's filename
+        vector<Image> small_image;  //store the corresponding image in the same sequence
+        vector<int ***> small_avg;      //store the average value correspond to image
         
-        //處理圖片所用到的變數
+        //the variables used to process photo
+        vector<int ***> splited_photo; //the splited target photo
+        
     public:
+        //initialization
         PhotoMosaic();
         ~PhotoMosaic();
         Image *InputImage(string BigPhotoName, string Mnist_Folder);
-        //void SplitPhoto();
+        //Image Processing
         int*** CalculateAverage(Image image);
         int getBestMatchIndex(Image image, vector<int***>& avgs);
-        void Generate_Mosaic();
         vector<int ***> splitImage(int ***pixels, int width, int height, int subWidth, int subHeight);
         int ***createImageGrid(const vector<int ***>& images, int subWidth, int subHeight, int width, int height);
-
-
+        RGBImage Generate_Mosaic();
+        
+        /*Memories need to delete: 
+        1.Img1 that InputImage() declared
+        2.grid that createImageGrid() declared
+        Done 3. subImages that splitImage() declared -> using destructor
+        */
 };
 
 #endif

@@ -13,7 +13,7 @@ class Image{
                            //mainly used by CMD_Display
   public:
       Image();
-      ~Image();
+      virtual ~Image();
       virtual bool LoadImage(string filename);
       virtual void DumpImage(string filename);
       virtual void Display_X_Server();
@@ -21,6 +21,7 @@ class Image{
       virtual void Display_CMD();
       int get_width();
       int get_height();
+      // function
       virtual int **get_pixels();   //return 2-dimensiolan pixels array
       virtual int ***get_3D_pixels();  //return 3-dimensiolan pixels array
       void List_Name_Directory(string Path, vector<string> &filenames);

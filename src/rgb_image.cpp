@@ -5,6 +5,11 @@ RGBImage::RGBImage() : pixels(nullptr) {
     height = 0;
 }
 
+RGBImage::RGBImage(int _h, int _w) : pixels(nullptr){
+    width = _w;
+    height = _h;    
+}
+
 RGBImage::~RGBImage(){
     for (int i=0; i<height; ++i){
         for (int j=0; j<width; ++j){
@@ -38,7 +43,7 @@ void RGBImage::Display_ASCII(){
 
 void RGBImage::Display_CMD(){
     data_loader.Display_RGB_CMD(loadfilename);
-    /*  以下註解區塊目的是刪除產出的圖片檔
+    /*  the following code is usgin system() to delete the .jpg we generate
     std::string command = "rm -f ";
     command += loadfilename;
     int removeImage = system(command.c_str());
