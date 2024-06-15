@@ -11,15 +11,17 @@ RGBImage::RGBImage(int _h, int _w) : pixels(nullptr){
 }
 
 RGBImage::~RGBImage(){
-    for (int i=0; i<height; ++i){
-        for (int j=0; j<width; ++j){
-            delete [] pixels[i][j];
+    if (pixels) {
+        for (int i = 0; i < height; ++i) {
+            if (pixels[i]) {
+                for (int j = 0; j < width; ++j) {
+                    delete[] pixels[i][j];
+                }
+                delete[] pixels[i];
+            }
         }
+        delete[] pixels;
     }
-    for (int i=0; i<height; ++i){
-        delete [] pixels[i];
-    }
-    delete [] pixels;
 }
 
 bool RGBImage::LoadImage(string filename){

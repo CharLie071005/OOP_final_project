@@ -4,36 +4,31 @@
 #include "rgb_image.h"
 #include <map>
 #include <array>
+#include <vector>
+#include <string>
 
-class PhotoMosaic{
-    protected:
-        RGBImage image;
-        // store the Load image
-        vector<string> small_name;  //store small image's filename
-        vector<RGBImage> small_image;  //store the corresponding image in the same sequence
-        vector<int ***> small_avg;      //store the average value correspond to image
-        
-        //the variables used to process photo
-        vector<int ***> splited_photo; //the splited target photo
-        
+using namespace std;
+
+class PhotoMosaic: public RGBImage {
+    private:
+        Image* TImage;
+        Image subImage;
+        vector<string> sub_name; // Store small image's filename
+        vector<Image> sub_image; // Store the corresponding image in the same sequence
+        vector<array<int, 3>> sub_avg; // Store the average value correspond to image
+
     public:
-        //initialization
+        // Initialization
         PhotoMosaic();
         ~PhotoMosaic();
-        Image *InputImage(string BigPhotoName, string Mnist_Folder);
-        //Image Processing
-        int*** CalculateAverage(RGBImage image);
-        void CalculateAverage(int ***_pixels);
-        int getBestMatchIndex(int ***tar, vector<int***>& avgs);
-        vector<int ***> splitImage(int ***pixels, int width, int height, int subWidth, int subHeight);
-        int ***createImageGrid(const vector<int ***>& images, int subWidth, int subHeight, int width, int height);
-        RGBImage Generate_Mosaic();
-        
-        /*Memories need to delete: 
-        1.Img1 that InputImage() declared
-        2.grid that createImageGrid() declared
-        Done 3. subImages that splitImage() declared -> using destructor
-        */
+        PhotoMosaic(Image* image);
+        Image *get_TImage();
+        void readSubImage(const string& subPath, vector<string>& sub_Folder);
+        array<int, 3> CalculateAverage(int*** pixels, int width, int height);
+        int getBestMatchIndex(const array<int, 3>& tarAvg);
+        vector<int***> splitImage(int*** pixels, int subWidth, int subHeight, int width, int height);
+        int*** createImageGrid(const vector<int***>& sub_images_pixel, int subWidth, int subHeight, int width, int height);
+        void Generate_Mosaic(const string& path);
 };
 
 #endif
