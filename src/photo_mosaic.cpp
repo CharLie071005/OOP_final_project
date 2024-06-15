@@ -3,9 +3,7 @@
 PhotoMosaic::PhotoMosaic(){};
 
 PhotoMosaic::~PhotoMosaic(){
-    int subWidth = small_image[0].get_width();
-    int subHeight = small_image[0].get_height();
-    for (int*** subImage : splited_photo) {
+    for (auto subImage : splited_photo) {
         if (subImage != nullptr) {
             for (int i = 0; i < subHeight; ++i) {
                 if (subImage[i] != nullptr) {
@@ -19,7 +17,7 @@ PhotoMosaic::~PhotoMosaic(){
         }
     }
 
-    for (int*** subImage : small_avg) {
+    for (auto subImage : small_avg) {
         if (subImage != nullptr) {
             for (int i = 0; i < subHeight; ++i) {
                 if (subImage[i] != nullptr) {
