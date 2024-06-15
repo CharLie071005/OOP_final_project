@@ -20,7 +20,7 @@ PhotoMosaic::~PhotoMosaic(){
     }
 };
 
-int ***PhotoMosaic::CalculateAverage(Image image) {
+int ***PhotoMosaic::CalculateAverage(RGBImage image) {
     int sumR = 0, sumG = 0, sumB = 0, count = 0;
     int _h = image.get_height(), _w = image.get_width();
     int ***_pixels = image.get_3D_pixels(); 
@@ -73,14 +73,14 @@ void PhotoMosaic::CalculateAverage(int ***_pixels) {
 
 Image *PhotoMosaic::InputImage(string BigPhotoName, string Mnist_Folder){
     //Load the Target Photo, store as Pointer
-    Image *img1 = new RGBImage();  
+    RGBImage *img1 = new RGBImage();  
     img1->LoadImage("Image-Folder/mnist/img_100.jpg");
     
     //Construct the vector that store the name of mnists
     image.List_Name_Directory(Mnist_Folder, small_name);
     //Load every mnists and calculate the average value of every channel
     for (auto name : small_name ){
-        Image mni;
+        RGBImage mni;
         mni.LoadImage(name);
         small_avg.push_back(CalculateAverage(mni));
         small_image.push_back(mni);
