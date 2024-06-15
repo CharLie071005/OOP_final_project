@@ -19,8 +19,6 @@
 #define RGB_Linear  0b10000000
 #define RGB 0b11110000
 #define GRAY 0b11110000
-#define kernel 5
-#define Linear_theta 90.0
 
 //The Case loading function 
 bool loadCase(int8_t option, Image *image);

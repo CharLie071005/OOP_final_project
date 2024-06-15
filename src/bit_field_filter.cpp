@@ -8,11 +8,11 @@ bool loadCase(int8_t option, Image *image){
     }   
     if(option & GRAY_BOX){
         std::cout << endl << endl << "Load Gray Box" << endl << endl;
-        Gray_Box_Filter(image, kernel);
+        Gray_Box_Filter(image, 5);
     }
     if(option & GRAY_Med){
         std::cout << endl << endl << "Load Gray med" << endl << endl;
-        Median_Filter_Gray(image, kernel);
+        Median_Filter_Gray(image, 5);
     }    
     if(option & GRAY_Sobel){
         std::cout << endl << endl << "Load Gray Sobel" << endl << endl;
@@ -20,15 +20,15 @@ bool loadCase(int8_t option, Image *image){
     }
     if(option & GRAY_Linear){
         std::cout << endl << endl << "Load Gray Linear" << endl << endl;
-        Linear_Motion_Blur_Gray(image, Linear_theta, kernel);
+        Linear_Motion_Blur_Gray(image, 90.0, 10);
     }
     if(option & RGB_BOX){
         std::cout << endl << endl << "Load RGB Box" << endl << endl;
-        RGB_Box_Filter(image, kernel);
+        RGB_Box_Filter(image, 5);
     }
     if(option & RGB_Med){
         std::cout << endl << endl << "Load RGB Med" << endl << endl;
-        Median_Filter_RGB(image, kernel);
+        Median_Filter_RGB(image, 5);
     }
     if(option & RGB_Sobel){
         std::cout << endl << endl << "Load RGB Sobel" << endl << endl;
@@ -36,7 +36,7 @@ bool loadCase(int8_t option, Image *image){
     }
     if(option & RGB_Linear){
         std::cout << endl << endl << "Load RGB Linear" << endl << endl;
-        Linear_Motion_Blur_RGB(image, Linear_theta, kernel);
+        Linear_Motion_Blur_RGB(image, 90.0, 10);
     }
     return true;
 }

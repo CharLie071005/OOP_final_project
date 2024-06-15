@@ -167,13 +167,6 @@ RGBImage PhotoMosaic::Generate_Mosaic(){
     int height = image.get_height(), width = image.get_width();
     RGBImage Mosaic(height, width);
     int ***m_pixels = Mosaic.get_3D_pixels();
-    m_pixels = new int**[height];
-    for (int i =0; i < height; ++i){
-        m_pixels[height] = new int *[width];
-        for (int j =0; j < width; ++j){
-            m_pixels[i][j] = new int [3];
-        }
-    }
     int BestMatchIndex;
     vector<int ***> Grid_v;
     for (int y = 0; y < height / subHeight; y++) {
