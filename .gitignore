@@ -4,3 +4,4 @@ third-party/*
 obj/*.o
 obj/*.d
 Image_Processing
+cppchecnk-2.13.0/*

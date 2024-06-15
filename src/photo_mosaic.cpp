@@ -5,18 +5,32 @@ PhotoMosaic::PhotoMosaic(){};
 PhotoMosaic::~PhotoMosaic(){
     int subWidth = small_image[0].get_width();
     int subHeight = small_image[0].get_height();
-    int length = splited_photo.size() - 1;
-    for (int index = length; index >= 0; --index){
-        for (int y =0; y < subHeight; ++y){
-            for (int x =0; x < subWidth; ++x){
-                delete [] splited_photo[index][y][x];
+    for (int*** subImage : splited_photo) {
+        if (subImage != nullptr) {
+            for (int i = 0; i < subHeight; ++i) {
+                if (subImage[i] != nullptr) {
+                    for (int j = 0; j < subWidth; ++j) {
+                        delete[] subImage[i][j];
+                    }
+                    delete[] subImage[i];
+                }
             }
+            delete[] subImage;
         }
-        for (int i =0; i < subHeight; ++i){
-            delete [] splited_photo[index][i];
+    }
+
+    for (int*** subImage : small_avg) {
+        if (subImage != nullptr) {
+            for (int i = 0; i < subHeight; ++i) {
+                if (subImage[i] != nullptr) {
+                    for (int j = 0; j < subWidth; ++j) {
+                        delete[] subImage[i][j];
+                    }
+                    delete[] subImage[i];
+                }
+            }
+            delete[] subImage;
         }
-        delete [] splited_photo[index];
-        splited_photo[index] = nullptr;
     }
 };
 

@@ -2,10 +2,10 @@
 
 bool loadCase(int8_t option, Image *image){
     //image can only be gray or rgb -> if option in gray and rgb in same time => error
-    if ((option & (GRAY_BOX | GRAY_Med | GRAY_Sobel | GRAY_Linear)) && (option & (RGB_BOX | RGB_Med | RGB_Sobel | RGB_Linear))){
+    if (option & (RGB) && (option & GRAY)){
         cout << "Invalid option !" << endl;
         return false;
-    }
+    }   
     if(option & GRAY_BOX){
         std::cout << endl << endl << "Load Gray Box" << endl << endl;
         Gray_Box_Filter(image, 5);

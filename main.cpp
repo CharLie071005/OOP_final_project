@@ -4,8 +4,14 @@
 #include "photo_mosaic.h"
 #include "bit_field_filter.h"
 
-#define option1 0b00001100
-#define option2 0b10100000
+#define GRAY_BOX    0b00000001
+#define GRAY_Med    0b00000010
+#define GRAY_Sobel  0b00000100
+#define GRAY_Linear 0b00001000
+#define RGB_BOX     0b00010000
+#define RGB_Med     0b00100000
+#define RGB_Sobel   0b01000000
+#define RGB_Linear  0b10000000
 #define ENABLE_X_SERVER false
 
 
@@ -22,7 +28,7 @@ int main(int argc, char *argv[]){
     img1->Display_CMD();
 
     //test bit filed
-    if (loadCase(option1, img1)){
+    if (loadCase(GRAY_Sobel | GRAY_Linear , img1)){
         img1->DumpImage("imgtest1.jpg");
         if(ENABLE_X_SERVER){
             img1->Display_X_Server();
