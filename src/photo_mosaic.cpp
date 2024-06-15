@@ -46,6 +46,29 @@ int ***PhotoMosaic::CalculateAverage(Image image) {
     return _pixels;
 }
 
+void PhotoMosaic::CalculateAverage(int ***_pixles) {
+    int sumR = 0, sumG = 0, sumB = 0, count = 0;
+    int _h = small_image[0].get_height(), _w = small_image[0].get_width();
+
+    for (int y = 0; y < _h; ++y) {
+        for (int x = 0; x < _w; ++x) {
+            sumR += _pixels[y][x][0];
+            sumG += _pixels[y][x][1];
+            sumB += _pixels[y][x][2];
+            ++count;
+        }
+    }
+    int avgR = sumR / count;
+    int avgG = sumG / count;
+    int avgB = sumB / count;
+    for (int i=0; i < _h; ++i){
+        for (int j=0; j < _w; ++j){
+            _pixels[i][j][0] = avgR;
+            _pixels[i][j][1] = avgG;
+            _pixels[i][j][2] = avgB;
+        }
+    }
+}
 
 
 Image *PhotoMosaic::InputImage(string BigPhotoName, string Mnist_Folder){
@@ -66,12 +89,11 @@ Image *PhotoMosaic::InputImage(string BigPhotoName, string Mnist_Folder){
 
 }
 
-int PhotoMosaic::getBestMatchIndex(Image image, vector<int***>& avgs){
+int PhotoMosaic::getBestMatchIndex(int ***tar, vector<int***>& avgs){
     int bestIndex = 0;
-    int ***avg = image.get_3D_pixels();
     double minDist = numeric_limits<double>::max();
     for (size_t i = 0; i < avgs.size(); i++) {
-        double dist = pow(avg[0] - avgs[i][0], 2) + pow(avg[1] - avgs[i][1], 2) + pow(avg[2] - avgs[i][2], 2);
+        double dist = pow(tar[0] - avgs[i][0], 2) + pow(tar[1] - avgs[i][1], 2) + pow(tar[2] - avgs[i][2], 2);
         if (dist < minDist) {
             minDist = dist;
             bestIndex = i;
@@ -139,5 +161,16 @@ RGBImage PhotoMosaic::Generate_Mosaic(){
             m_pixels[i][j] = new int [3];
         }
     }
-
+    int BestMatchIndex;
+    vector<int ***> Grid_v;
+    for (int y = 0; y < height / subHeight; y++) {
+        for (int x = 0; x < width / subWidth; x++) {
+            CalculateAverage(splited_photo[y+x]); //calculate the Average of the y+xth splited photo
+            BestMatchIndex = getBestMatchIndex(splited_photo[y+x], small_image);
+            Grid_v.push_back(small_image[BestMatchIndex].get_3D_pixels());
+            
+        }
+    }
+    m_pixels = createImageGrid(Grid_v, subWidth, subHeight, width, height);
+    
 }
