@@ -58,7 +58,6 @@ int main(int argc, char *argv[]){
 
     //// some bit field filter design driven code here
     
-    //try ignore
     // some photo mosaic driven code here
 
     PhotoMosaic photo_mosaic;
