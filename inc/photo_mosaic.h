@@ -10,7 +10,7 @@ class PhotoMosaic{
         Image image;
         // store the Load image
         vector<string> small_name;  //store small image's filename
-        vector<Image> small_image;  //store the corresponding image in the same sequence
+        vector<RGBImage> small_image;  //store the corresponding image in the same sequence
         vector<int ***> small_avg;      //store the average value correspond to image
         
         //the variables used to process photo
@@ -22,7 +22,7 @@ class PhotoMosaic{
         ~PhotoMosaic();
         Image *InputImage(string BigPhotoName, string Mnist_Folder);
         //Image Processing
-        int*** CalculateAverage(Image image);
+        int*** CalculateAverage(RGBImage image);
         void CalculateAverage(int ***_pixels);
         int getBestMatchIndex(int ***tar, vector<int***>& avgs);
         vector<int ***> splitImage(int ***pixels, int width, int height, int subWidth, int subHeight);
