@@ -46,7 +46,7 @@ int ***PhotoMosaic::CalculateAverage(Image image) {
     return _pixels;
 }
 
-void PhotoMosaic::CalculateAverage(int ***_pixles) {
+void PhotoMosaic::CalculateAverage(int ***_pixels) {
     int sumR = 0, sumG = 0, sumB = 0, count = 0;
     int _h = small_image[0].get_height(), _w = small_image[0].get_width();
 
@@ -166,11 +166,11 @@ RGBImage PhotoMosaic::Generate_Mosaic(){
     for (int y = 0; y < height / subHeight; y++) {
         for (int x = 0; x < width / subWidth; x++) {
             CalculateAverage(splited_photo[y+x]); //calculate the Average of the y+xth splited photo
-            BestMatchIndex = getBestMatchIndex(splited_photo[y+x], small_image);
+            BestMatchIndex = getBestMatchIndex(splited_photo[y+x], small_avg);
             Grid_v.push_back(small_image[BestMatchIndex].get_3D_pixels());
             
         }
     }
     m_pixels = createImageGrid(Grid_v, subWidth, subHeight, width, height);
-    
+    return Mosaic;
 }

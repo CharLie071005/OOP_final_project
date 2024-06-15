@@ -23,7 +23,8 @@ class PhotoMosaic{
         Image *InputImage(string BigPhotoName, string Mnist_Folder);
         //Image Processing
         int*** CalculateAverage(Image image);
-        int getBestMatchIndex(Image image, vector<int***>& avgs);
+        void CalculateAverage(int ***_pixels);
+        int getBestMatchIndex(int ***tar, vector<int***>& avgs);
         vector<int ***> splitImage(int ***pixels, int width, int height, int subWidth, int subHeight);
         int ***createImageGrid(const vector<int ***>& images, int subWidth, int subHeight, int width, int height);
         RGBImage Generate_Mosaic();
