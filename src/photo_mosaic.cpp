@@ -33,32 +33,6 @@ PhotoMosaic::~PhotoMosaic(){
     }
 };
 
-int ***PhotoMosaic::CalculateAverage(RGBImage image) {
-    int sumR = 0, sumG = 0, sumB = 0, count = 0;
-    int _h = image.get_height(), _w = image.get_width();
-    int ***_pixels = image.get_3D_pixels(); 
-
-    for (int y = 0; y < _h; ++y) {
-        for (int x = 0; x < _w; ++x) {
-            sumR += _pixels[y][x][0];
-            sumG += _pixels[y][x][1];
-            sumB += _pixels[y][x][2];
-            ++count;
-        }
-    }
-    int avgR = sumR / count;
-    int avgG = sumG / count;
-    int avgB = sumB / count;
-    for (int i=0; i < _h; ++i){
-        for (int j=0; j < _w; ++j){
-            _pixels[i][j][0] = avgR;
-            _pixels[i][j][1] = avgG;
-            _pixels[i][j][2] = avgB;
-        }
-    }
-    return _pixels;
-}
-
 void PhotoMosaic::CalculateAverage(int ***_pixels) {
     int sumR = 0, sumG = 0, sumB = 0, count = 0;
     int _h = small_image[0].get_height(), _w = small_image[0].get_width();
@@ -95,8 +69,11 @@ Image *PhotoMosaic::InputImage(string BigPhotoName, string Mnist_Folder){
     for (auto name : small_name ){
         RGBImage mni;
         mni.LoadImage(name);
-        small_avg.push_back(CalculateAverage(mni));
         small_image.push_back(mni);
+        int ***mni_pixels = mni.get_3D_pixels();
+        CalculateAverage(mni_pixels);
+        small_avg.push_back(mni_pixels);
+        
     }
     return img1;
 
