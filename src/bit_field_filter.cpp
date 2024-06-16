@@ -6,37 +6,56 @@ bool loadCase(int8_t option, Image *image){
         cout << "Invalid option !" << endl;
         return false;
     }   
-    if(option & GRAY_BOX){
-        std::cout << endl << endl << "Load Gray Box" << endl << endl;
-        Gray_Box_Filter(image, 5);
-    }
-    if(option & GRAY_Med){
-        std::cout << endl << endl << "Load Gray med" << endl << endl;
-        Median_Filter_Gray(image, 5);
-    }    
-    if(option & GRAY_Sobel){
-        std::cout << endl << endl << "Load Gray Sobel" << endl << endl;
-        Sobel_Gradient_Filter_Gray(image);
-    }
-    if(option & GRAY_Linear){
-        std::cout << endl << endl << "Load Gray Linear" << endl << endl;
-        Linear_Motion_Blur_Gray(image, 90.0, 10);
-    }
-    if(option & RGB_BOX){
-        std::cout << endl << endl << "Load RGB Box" << endl << endl;
-        RGB_Box_Filter(image, 5);
-    }
-    if(option & RGB_Med){
-        std::cout << endl << endl << "Load RGB Med" << endl << endl;
-        Median_Filter_RGB(image, 5);
-    }
-    if(option & RGB_Sobel){
-        std::cout << endl << endl << "Load RGB Sobel" << endl << endl;
-        Sobel_Gradient_Filter_RGB(image);
-    }
-    if(option & RGB_Linear){
-        std::cout << endl << endl << "Load RGB Linear" << endl << endl;
-        Linear_Motion_Blur_RGB(image, 90.0, 10);
+    if (option & GRAY) {
+        if (option & GRAY_BOX) {
+            std::cout << "\n\nLoad Gray Box\n\n" << std::endl;
+            Gray_Box_Filter(image, 5);
+        }
+        if (option & GRAY_Med) {
+            std::cout << "\n\nLoad Gray Med\n\n" << std::endl;
+            Median_Filter_Gray(image, 5);
+        }
+        if (option & GRAY_Sobel) {
+            std::cout << "\n\nLoad Gray Sobel\n\n" << std::endl;
+            Sobel_Gradient_Filter_Gray(image);
+        }
+        if (option & GRAY_Linear) {
+            std::cout << "\n\nLoad Gray Linear\n\n" << std::endl;
+            Linear_Motion_Blur_Gray(image, 90.0, 10);
+        }
+        if (option & GRAY_Stretch) {
+            std::cout << "\n\nLoad Gray Stretch\n\n" << std::endl;
+            Contrast_Stretching_Gray(image);
+        }
+        if (option & GRAY_Histogram) {
+            std::cout << "\n\nLoad Gray Histogram\n\n" << std::endl;
+            Histogram_Equalization_Gray(image);
+        }
+    } else if (option & RGB) {
+        if (option & RGB_BOX) {
+            std::cout << "\n\nLoad RGB Box\n\n" << std::endl;
+            RGB_Box_Filter(image, 5);
+        }
+        if (option & RGB_Med) {
+            std::cout << "\n\nLoad RGB Med\n\n" << std::endl;
+            Median_Filter_RGB(image, 5);
+        }
+        if (option & RGB_Sobel) {
+            std::cout << "\n\nLoad RGB Sobel\n\n" << std::endl;
+            Sobel_Gradient_Filter_RGB(image);
+        }
+        if (option & RGB_Linear) {
+            std::cout << "\n\nLoad RGB Linear\n\n" << std::endl;
+            Linear_Motion_Blur_RGB(image, 90.0, 10);
+        }
+        if (option & RGB_Stretch) {
+            std::cout << "\n\nLoad RGB Stretch\n\n" << std::endl;
+            Contrast_Stretching_RGB(image);
+        }
+        if (option & RGB_Histogram) {
+            std::cout << "\n\nLoad RGB Histogram\n\n" << std::endl;
+            Histogram_Equalization_RGB(image);
+        }
     }
     return true;
 }
@@ -436,6 +455,132 @@ void Linear_Motion_Blur_RGB(Image *image, double angle, int kernel_size) {
             pixels[y][x][0] = round(sumR);
             pixels[y][x][1] = round(sumG);
             pixels[y][x][2] = round(sumB);
+        }
+    }
+}
+
+int map_pixel_value(int pixel) {
+    if (pixel >= 0 && pixel <= 25)
+        return static_cast<int>(12.0 * pixel / 25.0);
+    else if (pixel > 25 && pixel <= 76)
+        return static_cast<int>(26.0 * (pixel - 25) / 51.0 + 12);
+    else if (pixel > 76 && pixel <= 178)
+        return static_cast<int>(178.0 * (pixel - 76) / 102.0 + 38);
+    else if (pixel > 178 && pixel <= 229)
+        return static_cast<int>(26.0 * (pixel - 178) / 51.0 + 216);
+    else if (pixel > 229 && pixel <= 255)
+        return static_cast<int>(13.0 * (pixel - 229) / 26.0 + 242);
+    return pixel; // 处理异常值
+}
+
+void Contrast_Stretching_Gray(Image *image) {
+    int width = image->get_width();
+    int height = image->get_height();
+    int **pixels = image->get_pixels();
+
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            pixels[y][x] = map_pixel_value(pixels[y][x]);
+        }
+    }
+}
+
+void Contrast_Stretching_RGB(Image *image) {
+    int width = image->get_width();
+    int height = image->get_height();
+    int ***pixels = image->get_3D_pixels();
+
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            pixels[y][x][0] = map_pixel_value(pixels[y][x][0]);
+            pixels[y][x][1] = map_pixel_value(pixels[y][x][1]);
+            pixels[y][x][2] = map_pixel_value(pixels[y][x][2]);
+        }
+    }
+}
+
+void Histogram_Equalization_Gray(Image *image) {
+    int height = image->get_height();
+    int width = image->get_width();
+    int **pixels = image->get_pixels();
+    vector<int> histogram(256, 0);
+
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            histogram[pixels[y][x]]++;
+        }
+    }
+
+    vector<int> cdf(256, 0);
+    cdf[0] = histogram[0];
+    for (int i = 1; i < 256; i++) {
+        cdf[i] = cdf[i - 1] + histogram[i];
+    }
+
+    int cdf_min = *min_element(cdf.begin(), cdf.end());
+    int total_pixels = height * width;
+    vector<int> filtered(256, 0);
+    for (int i = 0; i < 256; i++) {
+        filtered[i] = round((float)(cdf[i] - cdf_min) / (total_pixels - cdf_min) * 255);
+    }
+
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            pixels[y][x] = filtered[pixels[y][x]];
+        }
+    }
+}
+
+void Histogram_Equalization_RGB(Image *image) {
+    int height = image->get_height();
+    int width = image->get_width();
+    int ***pixels = image->get_3D_pixels();
+    vector<int> histogramR(256, 0);
+    vector<int> histogramG(256, 0);
+    vector<int> histogramB(256, 0);
+
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            histogramR[pixels[y][x][0]]++;
+            histogramG[pixels[y][x][1]]++;
+            histogramB[pixels[y][x][2]]++;
+        }
+    }
+
+    vector<int> cdfR(256, 0);
+    vector<int> cdfG(256, 0);
+    vector<int> cdfB(256, 0);
+
+    cdfR[0] = histogramR[0];
+    cdfG[0] = histogramG[0];
+    cdfB[0] = histogramB[0];
+
+    for (int i = 1; i < 256; i++) {
+        cdfR[i] = cdfR[i - 1] + histogramR[i];
+        cdfG[i] = cdfG[i - 1] + histogramG[i];
+        cdfB[i] = cdfB[i - 1] + histogramB[i];
+    }
+
+    int cdfR_min = *min_element(cdfR.begin(), cdfR.end());
+    int cdfG_min = *min_element(cdfG.begin(), cdfG.end());
+    int cdfB_min = *min_element(cdfB.begin(), cdfB.end());
+
+    int total_pixels = height * width;
+    vector<int> filteredR(256, 0);
+    vector<int> filteredG(256, 0);
+    vector<int> filteredB(256, 0);
+
+    for (int i = 0; i < 256; i++) {
+        filteredR[i] = round((float)(cdfR[i] - cdfR_min) / (total_pixels - cdfR_min) * 255);
+        filteredG[i] = round((float)(cdfG[i] - cdfG_min) / (total_pixels - cdfG_min) * 255);
+        filteredB[i] = round((float)(cdfB[i] - cdfB_min) / (total_pixels - cdfB_min) * 255);
+    }
+
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            pixels[y][x][0] = filteredR[pixels[y][x][0]];
+            pixels[y][x][1] = filteredG[pixels[y][x][1]];
+            pixels[y][x][2] = filteredB[pixels[y][x][2]];
         }
     }
 }

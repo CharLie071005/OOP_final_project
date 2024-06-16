@@ -40,7 +40,6 @@ RGBImage::~RGBImage(){
 bool RGBImage::LoadImage(string filename){
     loadfilename = filename;
     //cout << "Load " << filename << "  In rgb_image.cpp" <<endl;
-
     pixels = data_loader.Load_RGB(filename, &width, &height);
     return true;
 }
