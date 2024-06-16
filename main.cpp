@@ -51,11 +51,7 @@ void TestRGBImage() {
     img2->Display_CMD();
 
     if(loadCase(option2, img2)) {
-<<<<<<< HEAD
-        img2->DumpImage("imgtest1.jpg");
-=======
         img2->DumpImage("imgtest2.jpg");
->>>>>>> Factor2_Ou
         if(ENABLE_X_SERVER) {
             img2->Display_X_Server();
         }
@@ -65,31 +61,10 @@ void TestRGBImage() {
 }
 
 void TestPhotoMosaic() {
-<<<<<<< HEAD
-    PhotoMosaic photo_mosaic;
-    photo_mosaic.InputImage("Image-Folder/gril_2x.png", "Image-Folder/cifar10");
-
-    RGBImage* img3 = new RGBImage();
-    img3->LoadImage("Image-Folder/mnist/img_100.jpg");
-
-    img3->DumpImage("img3.jpg");
-    if(ENABLE_X_SERVER) {
-        img3->Display_X_Server();
-    }
-    img3->Display_CMD();
-
-    RGBImage Mosaiced_photo = photo_mosaic.Generate_Mosaic();
-    Mosaiced_photo.DumpImage("Mosaiced_Photo.jpg");
-
-    if(ENABLE_X_SERVER) {
-        Mosaiced_photo.Display_X_Server();
-    }
-    Mosaiced_photo.Display_CMD();
-    delete img3;
-=======
     PhotoMosaic mosaic;
     RGBImage *loadimg = mosaic.InputPath("Image-Folder/girl_2x.png", "Image-Folder/cifar10"); 
     loadimg->DumpImage("LoadImage.jpg");
+    cout << "Display CMD" <<endl;
     loadimg->Display_CMD();
     
     RGBImage *Mosaic = mosaic.Generate_Mosaic();
@@ -98,5 +73,4 @@ void TestPhotoMosaic() {
     loadimg->Display_CMD();
     delete Mosaic;
     Mosaic = nullptr;
->>>>>>> Factor2_Ou
 }

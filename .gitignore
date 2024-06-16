@@ -4,8 +4,4 @@ third-party/*
 obj/*.o
 obj/*.d
 Image_Processing
-<<<<<<< HEAD
-cppchecnk-2.13.0/
-=======
 cppcheck-2.13.0/
->>>>>>> Factor2_Ou

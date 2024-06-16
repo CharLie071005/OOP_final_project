@@ -1,29 +1,14 @@
 #ifndef _PHOTO_MOSAIC_H_
 #define _PHOTO_MOSAIC_H_
+#include "image.h"
 #include "rgb_image.h"
+#include <map>
 #include <array>
 #include <vector>
 #include <string>
 #define SUB_PIC_SIZE 32
 #define Max_Small_Number 10000
 
-<<<<<<< HEAD
-class PhotoMosaic{
-    private:
-        Image image;
-
-        vector<string> small_name;
-        vector<RGBImage> small_image;
-        vector<RGBmage> Bestvector;
-    public:
-        PhotoMosaic();
-        ~PhotoMosaic();
-        Image *InputFile(const string &Bigphoto, const string &MinDir);
-        void CalculateAverage();
-        void SplitImage();
-        void CreateGridImage();
-        RGBImage GenerateMosaic();
-=======
 using namespace std;
 
 class PhotoMosaic {
@@ -40,21 +25,17 @@ class PhotoMosaic {
         int *avgB_small;
         int simage_number; //storage the number of small_image
         vector<int> Best_fit_index;
-        
-        //function
-        void readSubImage();
-        void Calculate_SmallAverage();
-        void Calculate_TarAverage();
-        void getBestMatchIndex();  
     public:
         // Initialization
         PhotoMosaic();
         ~PhotoMosaic();
-        RGBImage *InputPath(const string& Bigphoto, const string &cifatDir);    
-        
+        RGBImage *InputPath(const string& Bigphoto, const string &cifatDir);  
+        void readSubImage();  
         //Processing Image
+        void Calculate_SmallAverage();
+        void Calculate_TarAverage();
+        void getBestMatchIndex();      
         RGBImage *Generate_Mosaic();
->>>>>>> Factor2_Ou
 };
 
 #endif

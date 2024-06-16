@@ -1,9 +1,5 @@
 #include "image.h"
 
-<<<<<<< HEAD
-Image::Image(
-){}
-=======
 Image::Image(){
     height =0;
     width =0;
@@ -13,16 +9,11 @@ Image::Image(int _h, int _w) {
     height = _h;
     width = _w;
 }
->>>>>>> Factor2_Ou
 
 Image::~Image(){}
 
 bool Image::LoadImage(string filename){
-<<<<<<< HEAD
-    cout << "Load Image's Load Image\n";
-=======
     //cout << "LoadImage" << filename  << "  at Image.cpp" <<endl;
->>>>>>> Factor2_Ou
     return true;
 }
 

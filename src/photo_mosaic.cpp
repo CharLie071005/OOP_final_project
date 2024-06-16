@@ -1,62 +1,4 @@
 #include "photo_mosaic.h"
-<<<<<<< HEAD
-
-PhotoMosaic::PhotoMosaic(){}
-
-PhotoMosaic::~PhotoMosaic(){}
-
-array<int, 3> PhotoMosaic::CalculateAverage(RGBImage image){
-    int width = image.get_width(), height = image.get_height();
-    int avgR =0, avgG =0, avgB =0, count =0;
-    int ***_pixels = image.get_3D_pixels();
-    for (int y =0; y < height; ++y){
-        for (int x =0; x < width; ++x)[
-            avgR += _pixels[y][x][0];
-            avgG += _pixels[y][x][1];
-            avgB += _pixels[y][x][2];
-            count++;
-        ]
-    }
-    array<int ,3> arr;
-    arr[0] = avgR / count;
-    arr[1] = avgG / count;
-    arr[2] = avgB / count;
-    return arr;
-}
-
-Image *PhotoMosaic::InputFile(const string &Bigphoto, const string &MinDir){
-    image.LoadImage(Bigphoto);
-
-    if(!image.List_Directory(MinDir, small_name)){
-        cout << "Open file failed\n";
-        exit(1);
-    }
-    for (auto name : small_name){
-        RGBImage img;
-        img.LoadImage(name);
-        small_image.push_back(img);
-        small_avg.push_back(CalculateAverage(img));
-    }
-    subheight = small_image[0].get_height(); 
-    subwidth = small_image[0].get_width();
-}
-
-void PhotoMosaic::SplitImage(){
-    int ny = image.get_height() / subheight;
-    int nx = image.get_width() / subwidth;
-    for (int i =0; i < ny; ++i){
-        for (int j =0; j < nx; ++j){
-            RGBImage splited(subheight, subwidth);
-            int ***split_pixels = splited.get_3D_pixels();
-            int ***splo
-            for (int i = 0; i < subheight; i++) {
-                _pixels[i] = new int*[subwidthw];
-                for (int j = 0; j < subwidthw; j++) {
-                    filtered_pixels[i][j] = new int[3];
-                }
-            }
-
-=======
 #include "rgb_image.h"
 #include <limits>
 #include <cmath>
@@ -85,8 +27,10 @@ PhotoMosaic::~PhotoMosaic() {
 
 RGBImage *PhotoMosaic::InputPath(const string& Bigphoto, const string &cifarDir){
     tarimage.LoadImage(Bigphoto);
+    cout << "Load tar success" <<endl;
     data_loader.List_Directory(cifarDir, sub_name);
     this->readSubImage();
+    cout << "Load SubImage success" <<endl;
     int tile_width = tarimage.get_width() / SUB_PIC_SIZE;
     int tile_height = tarimage.get_height() / SUB_PIC_SIZE;
     avgR_tar_grid = new int [tile_height * tile_width];
@@ -104,7 +48,6 @@ void PhotoMosaic::readSubImage(){
     avgR_small = new int [simage_number];
     avgG_small = new int [simage_number];
     avgB_small = new int [simage_number];
-
 }
 
 
@@ -167,30 +110,20 @@ void PhotoMosaic::getBestMatchIndex() {
                 minDist = diff;
                 bestIndex = j;
             }
->>>>>>> Factor2_Ou
         }
         Best_fit_index.push_back(bestIndex);
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> Factor2_Ou
-}
-void PhotoMosaic::CreateGridImage(){
-
 }
 
-<<<<<<< HEAD
-RGBImage PhotoMosaic::GenerateMosaic(){
-    return 0;
-}
-=======
 // Generate the mosaic image
 RGBImage *PhotoMosaic::Generate_Mosaic() {
+    cout << "Enter Gen_Mosaic" <<endl;
     int height = tarimage.get_height(), width = tarimage.get_width();
     RGBImage *Mosaic = new RGBImage(height , width);  //remember to delete this in main.cpp
     Calculate_TarAverage();
+    cout << "Calculate Target average success" <<endl;
     Calculate_SmallAverage();
+    cout << "Calculate small average success" <<endl;
     int ***_pixels = Mosaic->get_3D_pixels();
     int index =0;
     for (int n_y =0; n_y <= height - SUB_PIC_SIZE; n_y += SUB_PIC_SIZE){
@@ -209,4 +142,3 @@ RGBImage *PhotoMosaic::Generate_Mosaic() {
     return Mosaic;
 }
 
->>>>>>> Factor2_Ou

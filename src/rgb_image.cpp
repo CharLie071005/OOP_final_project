@@ -38,11 +38,7 @@ RGBImage::~RGBImage(){
 
 bool RGBImage::LoadImage(string filename){
     loadfilename = filename;
-<<<<<<< HEAD
-    cout << "Load RGBImage's Load Image\n";
-=======
     //cout << "Load " << filename << "  In rgb_image.cpp" <<endl;
->>>>>>> Factor2_Ou
     if (pixels){
         for (int i=0; i<height; ++i){
             for (int j=0; j<width; ++j){
