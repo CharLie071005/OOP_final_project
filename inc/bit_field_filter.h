@@ -17,6 +17,9 @@
 #define RGB_Med     0b00100000
 #define RGB_Sobel   0b01000000
 #define RGB_Linear  0b10000000
+#define RGB  0b11110000
+#define GRAY  0b00001111
+//search stdint.h
 
 //The Case loading function 
 bool loadCase(int8_t option, Image *image);

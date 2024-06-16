@@ -6,29 +6,36 @@
 #include <array>
 #include <vector>
 #include <string>
+#define SUB_PIC_SIZE 32
+#define Max_Small_Number 10000
 
 using namespace std;
 
-class PhotoMosaic: public RGBImage {
+class PhotoMosaic {
     private:
-        Image* TImage;
-        Image subImage;
-        vector<string> sub_name; // Store small image's filename
-        vector<Image> sub_image; // Store the corresponding image in the same sequence
-        vector<array<int, 3>> sub_avg; // Store the average value correspond to image
-
+        vector<string> sub_name; // Store small image's filename       
+        RGBImage tarimage;
+        RGBImage small_img[Max_Small_Number];
+        static Data_Loader data_loader;
+        int *avgR_tar_grid;
+        int *avgG_tar_grid;
+        int *avgB_tar_grid;
+        int *avgR_small;
+        int *avgG_small;
+        int *avgB_small;
+        int simage_number; //storage the number of small_image
+        vector<int> Best_fit_index;
     public:
         // Initialization
         PhotoMosaic();
         ~PhotoMosaic();
-        PhotoMosaic(Image* image);
-        Image *get_TImage();
-        void readSubImage(const string& subPath, vector<string>& sub_Folder);
-        array<int, 3> CalculateAverage(int*** pixels, int width, int height);
-        int getBestMatchIndex(const array<int, 3>& tarAvg);
-        vector<int***> splitImage(int*** pixels, int subWidth, int subHeight, int width, int height);
-        int*** createImageGrid(const vector<int***>& sub_images_pixel, int subWidth, int subHeight, int width, int height);
-        void Generate_Mosaic(const string& path);
+        RGBImage *InputPath(const string& Bigphoto, const string &cifatDir);  
+        void readSubImage();  
+        //Processing Image
+        void Calculate_SmallAverage();
+        void Calculate_TarAverage();
+        void getBestMatchIndex();      
+        RGBImage *Generate_Mosaic();
 };
 
 #endif

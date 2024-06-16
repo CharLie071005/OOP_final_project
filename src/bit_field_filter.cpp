@@ -2,17 +2,17 @@
 
 bool loadCase(int8_t option, Image *image){
     //image can only be gray or rgb -> if option in gray and rgb in same time => error
-    if ((option & (GRAY_BOX | GRAY_Med | GRAY_Sobel | GRAY_Linear)) && (option & (RGB_BOX | RGB_Med | RGB_Sobel | RGB_Linear))){
+    if (option & (RGB) && (option & GRAY)){
         cout << "Invalid option !" << endl;
         return false;
-    }
+    }   
     if(option & GRAY_BOX){
         std::cout << endl << endl << "Load Gray Box" << endl << endl;
         Gray_Box_Filter(image, 5);
     }
     if(option & GRAY_Med){
         std::cout << endl << endl << "Load Gray med" << endl << endl;
-        Median_Filter_Gray(image, 3);
+        Median_Filter_Gray(image, 5);
     }    
     if(option & GRAY_Sobel){
         std::cout << endl << endl << "Load Gray Sobel" << endl << endl;
@@ -28,7 +28,7 @@ bool loadCase(int8_t option, Image *image){
     }
     if(option & RGB_Med){
         std::cout << endl << endl << "Load RGB Med" << endl << endl;
-        Median_Filter_RGB(image, 3);
+        Median_Filter_RGB(image, 5);
     }
     if(option & RGB_Sobel){
         std::cout << endl << endl << "Load RGB Sobel" << endl << endl;

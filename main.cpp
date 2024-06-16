@@ -61,18 +61,16 @@ void TestRGBImage() {
 }
 
 void TestPhotoMosaic() {
-    Image* img3T = new RGBImage();
-    PhotoMosaic* img3 = new PhotoMosaic(img3T);
-    img3->get_TImage()->LoadImage("Image-Folder/girl_2x.png");
-    cout << "Load Image success\n";
-    img3->get_TImage()->DumpImage("img3.jpg");
-    cout << "Dump Image success\n";
-    img3->Generate_Mosaic("Image-Folder/mnist");
-    img3->get_TImage()->DumpImage("Mosaiced_Photo.jpg");
-
-    if(ENABLE_X_SERVER) {
-        img3->get_TImage()->Display_X_Server();
-    }
-    img3->get_TImage()->Display_CMD();
-    delete img3;
+    PhotoMosaic mosaic;
+    RGBImage *loadimg = mosaic.InputPath("Image-Folder/girl_2x.png", "Image-Folder/cifar10"); 
+    loadimg->DumpImage("LoadImage.jpg");
+    cout << "Display CMD" <<endl;
+    loadimg->Display_CMD();
+    
+    RGBImage *Mosaic = mosaic.Generate_Mosaic();
+    loadimg->DumpImage("LoadImage.jpg");
+    cout << "Display Mosaiced loadimg" << endl;  
+    loadimg->Display_CMD();
+    delete Mosaic;
+    Mosaic = nullptr;
 }
