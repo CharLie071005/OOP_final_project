@@ -1,6 +1,7 @@
 #include "gray_image.h"
 
-GrayImage::GrayImage() : pixels(nullptr){
+GrayImage::GrayImage() : Image(0,0){
+    pixels = nullptr;
 }
 GrayImage::~GrayImage(){
     if (pixels){

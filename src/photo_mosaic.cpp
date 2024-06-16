@@ -5,144 +5,138 @@
 #include <iostream>
 
 // Constructor
-PhotoMosaic::PhotoMosaic() {}
-
-PhotoMosaic::PhotoMosaic(Image* image) {
-    TImage = image;
+PhotoMosaic::PhotoMosaic() {
+    simage_number = 0;
 }
 
 // Destructor
-PhotoMosaic::~PhotoMosaic() {}
+PhotoMosaic::~PhotoMosaic() {
+    delete [] avgR_tar_grid;
+    avgR_tar_grid = nullptr;
+    delete [] avgG_tar_grid;
+    avgG_tar_grid = nullptr;
+    delete [] avgB_tar_grid;
+    avgB_tar_grid = nullptr;
+    delete [] avgR_small;
+    avgR_small = nullptr;
+    delete [] avgG_small;
+    avgG_small = nullptr;
+    delete [] avgB_small;
+    avgB_small = nullptr;
+}
 
-// Read sub-images
-void PhotoMosaic::readSubImage(const string& imgName, vector<string>& Mnist_Folder) {
-    subImage.List_Name_Directory(imgName, Mnist_Folder);
-    for (const auto& name : Mnist_Folder) {
-        subImage.LoadImage(name);
-        sub_image.push_back(subImage);
-        int*** _pixel = subImage.get_3D_pixels();
-        sub_avg.push_back(CalculateAverage(_pixel, subImage.get_width(), subImage.get_height()));
+RGBImage *PhotoMosaic::InputPath(const string& Bigphoto, const string &cifarDir){
+    tarimage.LoadImage(Bigphoto);
+    data_loader.List_Directory(cifarDir, sub_name);
+    this->readSubImage();
+    int tile_width = tarimage.get_width() / SUB_PIC_SIZE;
+    int tile_height = tarimage.get_height() / SUB_PIC_SIZE;
+    avgR_tar_grid = new int [tile_height * tile_width];
+    avgG_tar_grid = new int [tile_height * tile_width];
+    avgB_tar_grid = new int [tile_height * tile_width];
+    return &tarimage;
+}
+
+void PhotoMosaic::readSubImage(){
+    for(auto name : sub_name){
+        RGBImage img;
+        small_img[simage_number].LoadImage(name);
+        simage_number++;
+    }
+    avgR_small = new int [simage_number];
+    avgG_small = new int [simage_number];
+    avgB_small = new int [simage_number];
+
+}
+
+
+// Calculate the average color of an image
+void PhotoMosaic::Calculate_SmallAverage() {
+    for (int index =0; index < simage_number; ++index){
+        for (int y = 0; y < SUB_PIC_SIZE; ++y) {
+            for (int x = 0; x < SUB_PIC_SIZE; ++x) {
+                avgR_small[index] += small_img[index].get_3D_pixels()[y][x][0];
+                avgG_small[index] += small_img[index].get_3D_pixels()[y][x][1];
+                avgB_small[index] += small_img[index].get_3D_pixels()[y][x][2];
+            }
+        }
+        avgR_small[index] /= SUB_PIC_SIZE * SUB_PIC_SIZE;
+        avgG_small[index] /= SUB_PIC_SIZE * SUB_PIC_SIZE;
+        avgB_small[index] /= SUB_PIC_SIZE * SUB_PIC_SIZE;
     }
 }
 
-// Calculate the average color of an image
-array<int, 3> PhotoMosaic::CalculateAverage(int*** pixels, int width, int height) {
-    long sumR = 0, sumG = 0, sumB = 0;
-    int count = width * height;
+void PhotoMosaic::Calculate_TarAverage() {
+    int index = 0;
+    int height = tarimage.get_height(), width = tarimage.get_width();
+    for (int n_y =0; n_y <= height - SUB_PIC_SIZE; n_y += SUB_PIC_SIZE){
+        for (int n_x =0; n_x <= width - SUB_PIC_SIZE; n_x += SUB_PIC_SIZE){
+            int sumR =0, sumG = 0, sumB =0;
+            //run the tarpixels int the range of (n_x, n_y) to (n_x + 32, n_y + 32)
+            for (int y = n_y; y < SUB_PIC_SIZE + n_y; ++y) {
+                for (int x = n_x; x < SUB_PIC_SIZE + n_x; ++x) {
+                    sumR += tarimage.get_3D_pixels()[y][x][0];
+                    sumG += tarimage.get_3D_pixels()[y][x][1];
+                    sumB += tarimage.get_3D_pixels()[y][x][2];
+                }
+            }
+            sumR /= SUB_PIC_SIZE * SUB_PIC_SIZE;
+            sumG /= SUB_PIC_SIZE * SUB_PIC_SIZE;
+            sumB /= SUB_PIC_SIZE * SUB_PIC_SIZE;
 
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
-            sumR += pixels[y][x][0];
-            sumG += pixels[y][x][1];
-            sumB += pixels[y][x][2];
+            avgR_tar_grid[index] = sumR;
+            avgG_tar_grid[index] = sumG;
+            avgB_tar_grid[index] = sumB;
+            index++;
         }
     }
-
-    return { static_cast<int>(sumR / count), static_cast<int>(sumG / count), static_cast<int>(sumB / count) };
 }
 
 // Find the best match index based on the average color
-int PhotoMosaic::getBestMatchIndex(const array<int, 3>& tarAvg) {
-    int bestIndex = 0;
-    double minDist = std::numeric_limits<double>::max();
-
-    for (size_t i = 0; i < sub_avg.size(); ++i) {
-        double dist = pow(tarAvg[0] - sub_avg[i][0], 2) + 
-                      pow(tarAvg[1] - sub_avg[i][1], 2) + 
-                      pow(tarAvg[2] - sub_avg[i][2], 2);
-        if (dist < minDist) {
-            minDist = dist;
-            bestIndex = i;
-        }
-    }
-    return bestIndex;
-}
-
-// Split the image into sub-images
-vector<int***> PhotoMosaic::splitImage(int*** pixels, int subWidth, int subHeight, int width, int height) {
-    vector<int***> subImages;
-    for (int y = 0; y < height / subHeight; ++y) {
-        for (int x = 0; x < width / subWidth; ++x) {
-            int*** subImage = new int**[subHeight];
-            for (int i = 0; i < subHeight; ++i) {
-                subImage[i] = new int*[subWidth];
-                for (int j = 0; j < subWidth; ++j) {
-                    subImage[i][j] = new int[3];
-                    subImage[i][j][0] = pixels[y * subHeight + i][x * subWidth + j][0];
-                    subImage[i][j][1] = pixels[y * subHeight + i][x * subWidth + j][1];
-                    subImage[i][j][2] = pixels[y * subHeight + i][x * subWidth + j][2];
-                }
-            }
-            subImages[y][x] = subImage;
-        }
-    }
-    return subImages;
-}
-
-// Create the image grid
-int*** PhotoMosaic::createImageGrid(const vector<int***>& sub_images_pixel, int subWidth, int subHeight, int width, int height) {
-    int*** grid = new int**[height];
-    for (int i = 0; i < height; ++i) {
-        grid[i] = new int*[width];
-        for (int j = 0; j < width; ++j) {
-            grid[i][j] = new int[3];
-        }
-    }
-    cout << "Start Grid success\n";
-    for (int y = 0; y < height / subHeight; ++y) {
-        for (int x = 0; x < width / subWidth; ++x) {
-            for (int i = 0; i < subHeight; ++i) {
-                for (int j = 0; j < subWidth; ++j) {
-                    grid[y * subHeight + i][x * subWidth + j][0] = sub_images_pixel[y * (width / subWidth) + x][i][j][0];
-                    grid[y * subHeight + i][x * subWidth + j][1] = sub_images_pixel[y * (width / subWidth) + x][i][j][1];
-                    grid[y * subHeight + i][x * subWidth + j][2] = sub_images_pixel[y * (width / subWidth) + x][i][j][2];
-                }
+void PhotoMosaic::getBestMatchIndex() {
+    int tile_width = tarimage.get_width() / SUB_PIC_SIZE;
+    int tile_height = tarimage.get_height() / SUB_PIC_SIZE;
+    for (int y =0; y < tile_height * tile_width; ++y){
+        int bestIndex = 0;
+        double minDist = std::numeric_limits<double>::max();
+        for (int j =0; j < simage_number; ++j){
+            double r_diff = avgR_tar_grid[y] - avgR_small[j];
+            double g_diff = avgG_tar_grid[y] - avgG_small[j];
+            double b_diff = avgB_tar_grid[y] - avgB_small[j];
+            double diff = sqrt(r_diff * r_diff + g_diff * g_diff + b_diff * b_diff);
+        
+            if (diff < minDist){
+                minDist = diff;
+                bestIndex = j;
             }
         }
+        Best_fit_index.push_back(bestIndex);
     }
-    return grid;
+
 }
+
 
 // Generate the mosaic image
-void PhotoMosaic::Generate_Mosaic(const string& path) {
-    cout << "enter Generate_MOsaic\n";
-    int subHeight = sub_image[0].get_height(), subWidth = sub_image[0].get_width();
-    cout << "get subheight success\n";
-    int height = TImage->get_height(), width = TImage->get_width();
-    cout << "get Imageheight success\n";
-    vector<string> subName;
-    cout << "Set up Generate_Mosaic success\n";
-    readSubImage(path, subName);
-    cout << "Read subImage success\n";
-
-    int*** m_pixels = TImage->get_3D_pixels();
-    vector<int***> splitedImage = splitImage(m_pixels, subWidth, subHeight, width, height);
-    cout << "Split Image success\n";
-    vector<int***> Grid_v;
-    cout << "Ready to Generate_mosaic success\n";
-    for (int y = 0; y < height / subHeight; y++) {
-    for (int x = 0; x < width / subWidth; x++) {
-        CalculateAverage(splitImage[y * (width / subWidth) + x]); // Calculate the average of the y+xth splited photo
-        BestMatchIndex = getBestMatchIndex(splited_image[y * (width / subWidth) + x], sub_avg);
-        Grid_v.push_back(sub_image[BestMatchIndex].get_3D_pixels());
+RGBImage *PhotoMosaic::Generate_Mosaic() {
+    int height = tarimage.get_height(), width = tarimage.get_width();
+    RGBImage *Mosaic = new RGBImage(height , width);  //remember to delete this in main.cpp
+    Calculate_TarAverage();
+    Calculate_SmallAverage();
+    int ***_pixels = Mosaic->get_3D_pixels();
+    int index =0;
+    for (int n_y =0; n_y <= height - SUB_PIC_SIZE; n_y += SUB_PIC_SIZE){
+        for (int n_x =0; n_x <= width - SUB_PIC_SIZE; n_x += SUB_PIC_SIZE){
+            int *** best_pixels = small_img[ Best_fit_index[index] ].get_3D_pixels();
+            for (int y = 0; y < SUB_PIC_SIZE + n_y; ++y) {
+                for (int x = 0; x < SUB_PIC_SIZE + n_x; ++x) {
+                    _pixels[n_y + y][n_x + x][0] = best_pixels[y][x][0];
+                    _pixels[n_y + y][n_x + x][1] = best_pixels[y][x][1];
+                    _pixels[n_y + y][n_x + x][2] = best_pixels[y][x][2];
+                }
+            }
+            index++;
+        }
     }
+    return Mosaic;
 }
 
-    // Clean up previously allocated memory
-    // for (int i = 0; i < height; ++i) {
-    //     for (int j = 0; j < width; ++j) {
-    //         delete[] m_pixels[i][j];
-    //     }
-    //     delete[] m_pixels[i];
-    // }
-    // delete[] m_pixels;
-
-    // Assign the new grid
-    m_pixels = createImageGrid(Grid_v, subWidth, subHeight, width, height);
-}
-
-// Load image
-
-Image *PhotoMosaic::get_TImage(){
-    return TImage;
-}
