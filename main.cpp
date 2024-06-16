@@ -15,7 +15,7 @@ void TestPhotoMosaic();
 int main(int argc, char *argv[]) {
     TestGrayImage();
     TestRGBImage();
-    // TestPhotoMosaic();
+    TestPhotoMosaic();
     return 0;
 }
 
@@ -29,15 +29,15 @@ void TestGrayImage() {
     img1->Display_ASCII();
     img1->Display_CMD();
 
-    // Test bit field
-    // if (loadCase(option1, img1)) {
-    //     img1->DumpImage("imgtest1.jpg");
-    //     if(ENABLE_X_SERVER) {
-    //         img1->Display_X_Server();
-    //     }
-    //     img1->Display_ASCII();
-    //     img1->Display_CMD();
-    // }
+    Test bit field
+    if (loadCase(option1, img1)) {
+        img1->DumpImage("imgtest1.jpg");
+        if(ENABLE_X_SERVER) {
+            img1->Display_X_Server();
+        }
+        img1->Display_ASCII();
+        img1->Display_CMD();
+    }
     delete img1;
 }
 
@@ -50,13 +50,13 @@ void TestRGBImage() {
     }
     img2->Display_CMD();
 
-    // if(loadCase(option2, img2)) {
-    //     img2->DumpImage("imgtest2.jpg");
-    //     if(ENABLE_X_SERVER) {
-    //         img2->Display_X_Server();
-    //     }
-    //     img2->Display_CMD();
-    // }
+    if(loadCase(option2, img2)) {
+        img2->DumpImage("imgtest2.jpg");
+        if(ENABLE_X_SERVER) {
+            img2->Display_X_Server();
+        }
+        img2->Display_CMD();
+    }
     delete img2;
 }
 
