@@ -89,7 +89,7 @@ void TestRGBImage() {
 
 void TestPhotoMosaic() {
     PhotoMosaic mosaic;
-    RGBImage *loadimg = mosaic.InputPath("Image-Folder/girl_2x.png", "Image-Folder/cifar10"); 
+    RGBImage *loadimg = mosaic.InputPath("Image-Folder/lena.jpg", "Image-Folder/cifar10"); 
     loadimg->DumpImage("LoadImage.jpg");
     cout << "Display CMD" <<endl;
     loadimg->Display_CMD();
