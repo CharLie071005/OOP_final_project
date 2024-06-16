@@ -17,7 +17,6 @@ public:
     void Display_CMD();
     //add function
     int ***get_3D_pixels();
-    RGBImage& operator = (Image image); //overloading
 };
 
 #endif

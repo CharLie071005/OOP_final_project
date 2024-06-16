@@ -29,7 +29,7 @@ class PhotoMosaic {
         // Initialization
         PhotoMosaic();
         ~PhotoMosaic();
-        RGBImage *InputPath(const string& Bigphoto, const string &cifatDir);  
+        RGBImage *InputPath(const string& Bigphoto, const string &cifatDir);    
         void readSubImage();  
         //Processing Image
         void Calculate_SmallAverage();
