@@ -121,7 +121,7 @@ RGBImage *PhotoMosaic::Generate_Mosaic() {
     int height = tarimage.get_height(), width = tarimage.get_width();
     RGBImage *Mosaic = new RGBImage(height , width);  //remember to delete this in main.cpp
     Calculate_TarAverage();
-    cout << "Calculate Target average success" <<endl;
+    cout << "Calc0ulate Target average success" <<endl;
     Calculate_SmallAverage();
     cout << "Calculate small average success" <<endl;
     int ***_pixels = Mosaic->get_3D_pixels();

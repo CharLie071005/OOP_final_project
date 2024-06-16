@@ -6,9 +6,10 @@ RGBImage::RGBImage() : Image(0,0){
 
 RGBImage::RGBImage(int _h, int _w){
     width = _w;
-    height = _h;    
-    for (int i=0; i < _h; ++i){
-        pixels[i] = new int*[_w];
+    height = _h;   
+    pixels = new int **[height];
+    for (int i=0; i < height; ++i){
+        pixels[i] = new int*[width];
         for (int j=0; j < _w; ++j){
             pixels[i][j] = new int [3];
         }
@@ -68,42 +69,4 @@ void RGBImage::Display_CMD(){
 }
 int ***RGBImage::get_3D_pixels(){
     return pixels;
-}
-
-RGBImage& RGBImage::operator=(Image image) {
-    if (this != &image) {  //如果不是=自己  ->執行assignment
-        height = image.get_height();
-        width = image.get_width();
-        int ***tmp_pixels = image.get_3D_pixels();
-
-        // 刪除現有的記憶體
-        if (pixels != nullptr) {
-            for (int i = 0; i < height; ++i) {
-                for (int j = 0; j < width; ++j) {
-                    delete[] pixels[i][j];
-                }
-                delete[] pixels[i];
-            }
-            delete[] pixels;
-        }
-
-        // 重新分配記憶體
-        pixels = new int**[height];
-        for (int i = 0; i < height; ++i) {
-            pixels[i] = new int*[width];
-            for (int j = 0; j < width; ++j) {
-                pixels[i][j] = new int[3];
-            }
-        }
-
-        //複製pixels值
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                for (int k = 0; k < 3; k++) {
-                    pixels[i][j][k] = tmp_pixels[i][j][k];
-                }
-            }
-        }
-    }
-    return *this;
 }

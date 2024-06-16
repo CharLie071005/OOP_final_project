@@ -29,7 +29,7 @@ void TestGrayImage() {
     img1->Display_ASCII();
     img1->Display_CMD();
 
-    Test bit field
+    //Test bit field
     if (loadCase(option1, img1)) {
         img1->DumpImage("imgtest1.jpg");
         if(ENABLE_X_SERVER) {
@@ -39,6 +39,7 @@ void TestGrayImage() {
         img1->Display_CMD();
     }
     delete img1;
+    img1 = nullptr;
 }
 
 void TestRGBImage() {
@@ -58,6 +59,7 @@ void TestRGBImage() {
         img2->Display_CMD();
     }
     delete img2;
+    img2 = nullptr;
 }
 
 void TestPhotoMosaic() {
@@ -67,10 +69,10 @@ void TestPhotoMosaic() {
     cout << "Display CMD" <<endl;
     loadimg->Display_CMD();
     
-    RGBImage *Mosaic = mosaic.Generate_Mosaic();
-    loadimg->DumpImage("LoadImage.jpg");
+    RGBImage *Mosaic = mosaic.Generate_Mosaic();   
+    Mosaic->DumpImage("mosaic.jpg");
     cout << "Display Mosaiced loadimg" << endl;  
-    loadimg->Display_CMD();
+    Mosaic->Display_CMD();
     delete Mosaic;
     Mosaic = nullptr;
 }
