@@ -6,37 +6,56 @@ bool loadCase(int8_t option, Image *image){
         cout << "Invalid option !" << endl;
         return false;
     }   
-    if(option & GRAY_BOX){
-        std::cout << endl << endl << "Load Gray Box" << endl << endl;
-        Gray_Box_Filter(image, 5);
-    }
-    if(option & GRAY_Med){
-        std::cout << endl << endl << "Load Gray med" << endl << endl;
-        Median_Filter_Gray(image, 5);
-    }    
-    if(option & GRAY_Sobel){
-        std::cout << endl << endl << "Load Gray Sobel" << endl << endl;
-        Sobel_Gradient_Filter_Gray(image);
-    }
-    if(option & GRAY_Linear){
-        std::cout << endl << endl << "Load Gray Linear" << endl << endl;
-        Linear_Motion_Blur_Gray(image, 90.0, 10);
-    }
-    if(option & RGB_BOX){
-        std::cout << endl << endl << "Load RGB Box" << endl << endl;
-        RGB_Box_Filter(image, 5);
-    }
-    if(option & RGB_Med){
-        std::cout << endl << endl << "Load RGB Med" << endl << endl;
-        Median_Filter_RGB(image, 5);
-    }
-    if(option & RGB_Sobel){
-        std::cout << endl << endl << "Load RGB Sobel" << endl << endl;
-        Sobel_Gradient_Filter_RGB(image);
-    }
-    if(option & RGB_Linear){
-        std::cout << endl << endl << "Load RGB Linear" << endl << endl;
-        Linear_Motion_Blur_RGB(image, 90.0, 10);
+    if (option & GRAY) {
+        if (option & GRAY_BOX) {
+            std::cout << "\n\nLoad Gray Box\n\n" << std::endl;
+            Gray_Box_Filter(image, 5);
+        }
+        if (option & GRAY_Med) {
+            std::cout << "\n\nLoad Gray Med\n\n" << std::endl;
+            Median_Filter_Gray(image, 5);
+        }
+        if (option & GRAY_Sobel) {
+            std::cout << "\n\nLoad Gray Sobel\n\n" << std::endl;
+            Sobel_Gradient_Filter_Gray(image);
+        }
+        if (option & GRAY_Linear) {
+            std::cout << "\n\nLoad Gray Linear\n\n" << std::endl;
+            Linear_Motion_Blur_Gray(image, 90.0, 10);
+        }
+        if (option & GRAY_Stretch) {
+            std::cout << "\n\nLoad Gray Stretch\n\n" << std::endl;
+            Contrast_Stretching_Gray(image);
+        }
+        if (option & GRAY_Histogram) {
+            std::cout << "\n\nLoad Gray Histogram\n\n" << std::endl;
+            Histogram_Equalization_Gray(image);
+        }
+    } else if (option & RGB) {
+        if (option & RGB_BOX) {
+            std::cout << "\n\nLoad RGB Box\n\n" << std::endl;
+            RGB_Box_Filter(image, 5);
+        }
+        if (option & RGB_Med) {
+            std::cout << "\n\nLoad RGB Med\n\n" << std::endl;
+            Median_Filter_RGB(image, 5);
+        }
+        if (option & RGB_Sobel) {
+            std::cout << "\n\nLoad RGB Sobel\n\n" << std::endl;
+            Sobel_Gradient_Filter_RGB(image);
+        }
+        if (option & RGB_Linear) {
+            std::cout << "\n\nLoad RGB Linear\n\n" << std::endl;
+            Linear_Motion_Blur_RGB(image, 90.0, 10);
+        }
+        if (option & RGB_Stretch) {
+            std::cout << "\n\nLoad RGB Stretch\n\n" << std::endl;
+            Contrast_Stretching_RGB(image);
+        }
+        if (option & RGB_Histogram) {
+            std::cout << "\n\nLoad RGB Histogram\n\n" << std::endl;
+            Histogram_Equalization_RGB(image);
+        }
     }
     return true;
 }
@@ -498,7 +517,7 @@ void Histogram_Equalization_Gray(Image *image) {
         cdf[i] = cdf[i - 1] + histogram[i];
     }
 
-    int cdf_min = min_element(cdf.begin(), cdf.end());
+    int cdf_min = *min_element(cdf.begin(), cdf.end());
     int total_pixels = height * width;
     vector<int> filtered(256, 0);
     for (int i = 0; i < 256; i++) {
@@ -542,23 +561,26 @@ void Histogram_Equalization_RGB(Image *image) {
         cdfB[i] = cdfB[i - 1] + histogramB[i];
     }
 
-    int cdfR_min = min_element(cdfR.begin(), cdfR.end());
-    int cdfG_min = min_element(cdfG.begin(), cdfG.end());
-    int cdfB_min = min_element(cdfB.begin(), cdfB.end());
+    int cdfR_min = *min_element(cdfR.begin(), cdfR.end());
+    int cdfG_min = *min_element(cdfG.begin(), cdfG.end());
+    int cdfB_min = *min_element(cdfB.begin(), cdfB.end());
 
     int total_pixels = height * width;
-    vector<int> filtered(256, 0);
+    vector<int> filteredR(256, 0);
+    vector<int> filteredG(256, 0);
+    vector<int> filteredB(256, 0);
+
     for (int i = 0; i < 256; i++) {
-        filteredR[i] = round((float)(cdfR[i] - cdf_min) / (total_pixels - cdf_min) * 255);
-        filteredG[i] = round((float)(cdfG[i] - cdf_min) / (total_pixels - cdf_min) * 255);
-        filteredB[i] = round((float)(cdfB[i] - cdf_min) / (total_pixels - cdf_min) * 255);
+        filteredR[i] = round((float)(cdfR[i] - cdfR_min) / (total_pixels - cdfR_min) * 255);
+        filteredG[i] = round((float)(cdfG[i] - cdfG_min) / (total_pixels - cdfG_min) * 255);
+        filteredB[i] = round((float)(cdfB[i] - cdfB_min) / (total_pixels - cdfB_min) * 255);
     }
 
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            pixels[y][x][0] = filteredR[pixels[y][x]];
-            pixels[y][x][1] = filteredG[pixels[y][x]];
-            pixels[y][x][2] = filteredB[pixels[y][x]];
+            pixels[y][x][0] = filteredR[pixels[y][x][0]];
+            pixels[y][x][1] = filteredG[pixels[y][x][1]];
+            pixels[y][x][2] = filteredB[pixels[y][x][2]];
         }
     }
 }

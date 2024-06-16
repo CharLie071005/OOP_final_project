@@ -39,17 +39,6 @@ RGBImage::~RGBImage(){
 bool RGBImage::LoadImage(string filename){
     loadfilename = filename;
     //cout << "Load " << filename << "  In rgb_image.cpp" <<endl;
-    if (pixels){
-        for (int i=0; i<height; ++i){
-            for (int j=0; j<width; ++j){
-                delete [] pixels[i][j];
-            }
-        }
-        for (int i=0; i<height; ++i){
-            delete [] pixels[i];
-        }
-        delete [] pixels;
-    }
     pixels = data_loader.Load_RGB(filename, &width, &height);
     return true;
 }
