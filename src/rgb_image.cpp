@@ -24,6 +24,7 @@ RGBImage::~RGBImage(){
 
 bool RGBImage::LoadImage(string filename){
     loadfilename = filename;
+    cout << "Load RGBImage's Load Image\n";
     if (pixels){
         for (int i=0; i<height; ++i){
             for (int j=0; j<width; ++j){

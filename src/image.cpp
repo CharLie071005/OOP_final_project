@@ -1,10 +1,12 @@
 #include "image.h"
 
-Image::Image(){}
+Image::Image(
+){}
 
 Image::~Image(){}
 
 bool Image::LoadImage(string filename){
+    cout << "Load Image's Load Image\n";
     return true;
 }
 

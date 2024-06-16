@@ -1,159 +1,67 @@
 #include "photo_mosaic.h"
-#include "rgb_image.h"
-PhotoMosaic::PhotoMosaic(){};
 
-PhotoMosaic::~PhotoMosaic(){
-    int subHeight = small_image[0].get_height(), subWidth = small_image[0].get_width();
-    for (auto subImage : splited_photo) {
-        if (subImage != nullptr) {
-            for (int i = 0; i < subHeight; ++i) {
-                if (subImage[i] != nullptr) {
-                    for (int j = 0; j < subWidth; ++j) {
-                        delete[] subImage[i][j];
-                    }
-                    delete[] subImage[i];
+PhotoMosaic::PhotoMosaic(){}
+
+PhotoMosaic::~PhotoMosaic(){}
+
+array<int, 3> PhotoMosaic::CalculateAverage(RGBImage image){
+    int width = image.get_width(), height = image.get_height();
+    int avgR =0, avgG =0, avgB =0, count =0;
+    int ***_pixels = image.get_3D_pixels();
+    for (int y =0; y < height; ++y){
+        for (int x =0; x < width; ++x)[
+            avgR += _pixels[y][x][0];
+            avgG += _pixels[y][x][1];
+            avgB += _pixels[y][x][2];
+            count++;
+        ]
+    }
+    array<int ,3> arr;
+    arr[0] = avgR / count;
+    arr[1] = avgG / count;
+    arr[2] = avgB / count;
+    return arr;
+}
+
+Image *PhotoMosaic::InputFile(const string &Bigphoto, const string &MinDir){
+    image.LoadImage(Bigphoto);
+
+    if(!image.List_Directory(MinDir, small_name)){
+        cout << "Open file failed\n";
+        exit(1);
+    }
+    for (auto name : small_name){
+        RGBImage img;
+        img.LoadImage(name);
+        small_image.push_back(img);
+        small_avg.push_back(CalculateAverage(img));
+    }
+    subheight = small_image[0].get_height(); 
+    subwidth = small_image[0].get_width();
+}
+
+void PhotoMosaic::SplitImage(){
+    int ny = image.get_height() / subheight;
+    int nx = image.get_width() / subwidth;
+    for (int i =0; i < ny; ++i){
+        for (int j =0; j < nx; ++j){
+            RGBImage splited(subheight, subwidth);
+            int ***split_pixels = splited.get_3D_pixels();
+            int ***splo
+            for (int i = 0; i < subheight; i++) {
+                _pixels[i] = new int*[subwidthw];
+                for (int j = 0; j < subwidthw; j++) {
+                    filtered_pixels[i][j] = new int[3];
                 }
             }
-            delete[] subImage;
-        }
-    }
 
-    for (auto subImage : small_avg) {
-        if (subImage != nullptr) {
-            for (int i = 0; i < subHeight; ++i) {
-                if (subImage[i] != nullptr) {
-                    for (int j = 0; j < subWidth; ++j) {
-                        delete[] subImage[i][j];
-                    }
-                    delete[] subImage[i];
-                }
-            }
-            delete[] subImage;
-        }
-    }
-};
-
-void PhotoMosaic::CalculateAverage(int ***_pixels) {
-    int sumR = 0, sumG = 0, sumB = 0, count = 0;
-    int _h = small_image[0].get_height(), _w = small_image[0].get_width();
-
-    for (int y = 0; y < _h; ++y) {
-        for (int x = 0; x < _w; ++x) {
-            sumR += _pixels[y][x][0];
-            sumG += _pixels[y][x][1];
-            sumB += _pixels[y][x][2];
-            ++count;
-        }
-    }
-    int avgR = sumR / count;
-    int avgG = sumG / count;
-    int avgB = sumB / count;
-    for (int i=0; i < _h; ++i){
-        for (int j=0; j < _w; ++j){
-            _pixels[i][j][0] = avgR;
-            _pixels[i][j][1] = avgG;
-            _pixels[i][j][2] = avgB;
         }
     }
 }
-
-
-Image *PhotoMosaic::InputImage(string BigPhotoName, string Mnist_Folder){
-    //Load the Target Photo, store as Pointer
-    Image *img1 = new RGBImage();  
-    img1->LoadImage("Image-Folder/mnist/img_100.jpg");
-    
-    //Construct the vector that store the name of mnists
-    image.List_Name_Directory(Mnist_Folder, small_name);
-    //Load every mnists and calculate the average value of every channel
-    for (auto name : small_name ){
-        RGBImage mni;
-        mni.LoadImage(name);
-        small_image.push_back(mni);
-        int ***mni_pixels = mni.get_3D_pixels();
-        CalculateAverage(mni_pixels);
-        small_avg.push_back(mni_pixels);
-        
-    }
-    return img1;
+void PhotoMosaic::CreateGridImage(){
 
 }
 
-int PhotoMosaic::getBestMatchIndex(int ***tar, vector<int***>& avgs){
-    int bestIndex = 0;
-    double minDist = numeric_limits<double>::max();
-    for (size_t i = 0; i < avgs.size(); i++) {
-        double dist = pow(tar[0] - avgs[i][0], 2) + pow(tar[1] - avgs[i][1], 2) + pow(tar[2] - avgs[i][2], 2);
-        if (dist < minDist) {
-            minDist = dist;
-            bestIndex = i;
-        }
-    }
-    return bestIndex;
-}
-
-
-int ***PhotoMosaic::createImageGrid(const vector<int ***>& images, int subWidth, int subHeight, int width, int height) {
-    int ***grid = new int **[height];
-    for (int i = 0; i < height; i++) {
-        grid[i] = new int *[width];
-        for (int j = 0; j < width; j++) {
-            grid[i][j] = new int[3];
-        }
-    }
-
-    for (int y = 0; y < width / subWidth; y++) {
-        for (int x = 0; x < height / subHeight; x++) {
-            int ***subImage = images[y * width / subWidth + x];
-            for (int i = 0; i < subHeight; i++) {
-                for (int j = 0; j < subWidth; j++) {
-                    grid[y * subHeight + i][x * subWidth + j][0] = subImage[i][j][0];
-                    grid[y * subHeight + i][x * subWidth + j][1] = subImage[i][j][1];
-                    grid[y * subHeight + i][x * subWidth + j][2] = subImage[i][j][2];
-                }
-            }
-        }
-    }
-    return grid;
-}
-
-
-vector<int ***> PhotoMosaic::splitImage(int ***pixels, int width, int height, int subWidth, int subHeight) {
-    vector<int ***> subImages;
-    for (int y = 0; y < height / subHeight; y++) {
-        for (int x = 0; x < width / subWidth; x++) {
-            int ***subImage = new int **[subHeight];
-            for (int i = 0; i < subHeight; i++) {
-                subImage[i] = new int *[subWidth];
-                for (int j = 0; j < subWidth; j++) {
-                    subImage[i][j] = new int[3];
-                    subImage[i][j][0] = pixels[y * subHeight + i][x * subWidth + j][0];
-                    subImage[i][j][1] = pixels[y * subHeight + i][x * subWidth + j][1];
-                    subImage[i][j][2] = pixels[y * subHeight + i][x * subWidth + j][2];
-                }
-            }
-            subImages.push_back(subImage);
-        }
-    }
-    return subImages;
-}
-
-
-RGBImage PhotoMosaic::Generate_Mosaic(){
-    int subHeight = small_image[0].get_height(), subWidth = small_image[0].get_width();
-    int height = image.get_height(), width = image.get_width();
-    RGBImage Mosaic(height, width);
-    int ***m_pixels = Mosaic.get_3D_pixels();
-    int BestMatchIndex;
-    vector<int ***> Grid_v;
-    for (int y = 0; y < height / subHeight; y++) {
-        for (int x = 0; x < width / subWidth; x++) {
-            CalculateAverage(splited_photo[y+x]); //calculate the Average of the y+xth splited photo
-            BestMatchIndex = getBestMatchIndex(splited_photo[y+x], small_avg);
-            Grid_v.push_back(small_image[BestMatchIndex].get_3D_pixels());
-            
-        }
-    }
-    m_pixels = createImageGrid(Grid_v, subWidth, subHeight, width, height);
-    return Mosaic;
+RGBImage PhotoMosaic::GenerateMosaic(){
+    return 0;
 }
