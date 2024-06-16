@@ -439,3 +439,126 @@ void Linear_Motion_Blur_RGB(Image *image, double angle, int kernel_size) {
         }
     }
 }
+
+int map_pixel_value(int pixel) {
+    if (pixel >= 0 && pixel <= 25)
+        return static_cast<int>(12.0 * pixel / 25.0);
+    else if (pixel > 25 && pixel <= 76)
+        return static_cast<int>(26.0 * (pixel - 25) / 51.0 + 12);
+    else if (pixel > 76 && pixel <= 178)
+        return static_cast<int>(178.0 * (pixel - 76) / 102.0 + 38);
+    else if (pixel > 178 && pixel <= 229)
+        return static_cast<int>(26.0 * (pixel - 178) / 51.0 + 216);
+    else if (pixel > 229 && pixel <= 255)
+        return static_cast<int>(13.0 * (pixel - 229) / 26.0 + 242);
+    return pixel; // 处理异常值
+}
+
+void Contrast_Stretching_Gray(Image *image) {
+    int width = image->get_width();
+    int height = image->get_height();
+    int **pixels = image->get_pixels();
+
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            pixels[y][x] = map_pixel_value(pixels[y][x]);
+        }
+    }
+}
+
+void Contrast_Stretching_RGB(Image *image) {
+    int width = image->get_width();
+    int height = image->get_height();
+    int ***pixels = image->get_3D_pixels();
+
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            pixels[y][x][0] = map_pixel_value(pixels[y][x][0]);
+            pixels[y][x][1] = map_pixel_value(pixels[y][x][1]);
+            pixels[y][x][2] = map_pixel_value(pixels[y][x][2]);
+        }
+    }
+}
+
+void Histogram_Equalization_Gray(Image *image) {
+    int height = image->get_height();
+    int width = image->get_width();
+    int **pixels = image->get_pixels();
+    vector<int> histogram(256, 0);
+
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            histogram[pixels[y][x]]++;
+        }
+    }
+
+    vector<int> cdf(256, 0);
+    cdf[0] = histogram[0];
+    for (int i = 1; i < 256; i++) {
+        cdf[i] = cdf[i - 1] + histogram[i];
+    }
+
+    int cdf_min = min_element(cdf.begin(), cdf.end());
+    int total_pixels = height * width;
+    vector<int> filtered(256, 0);
+    for (int i = 0; i < 256; i++) {
+        filtered[i] = round((float)(cdf[i] - cdf_min) / (total_pixels - cdf_min) * 255);
+    }
+
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            pixels[y][x] = filtered[pixels[y][x]];
+        }
+    }
+}
+
+void Histogram_Equalization_RGB(Image *image) {
+    int height = image->get_height();
+    int width = image->get_width();
+    int ***pixels = image->get_3D_pixels();
+    vector<int> histogramR(256, 0);
+    vector<int> histogramG(256, 0);
+    vector<int> histogramB(256, 0);
+
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            histogramR[pixels[y][x][0]]++;
+            histogramG[pixels[y][x][1]]++;
+            histogramB[pixels[y][x][2]]++;
+        }
+    }
+
+    vector<int> cdfR(256, 0);
+    vector<int> cdfG(256, 0);
+    vector<int> cdfB(256, 0);
+
+    cdfR[0] = histogramR[0];
+    cdfG[0] = histogramG[0];
+    cdfB[0] = histogramB[0];
+
+    for (int i = 1; i < 256; i++) {
+        cdfR[i] = cdfR[i - 1] + histogramR[i];
+        cdfG[i] = cdfG[i - 1] + histogramG[i];
+        cdfB[i] = cdfB[i - 1] + histogramB[i];
+    }
+
+    int cdfR_min = min_element(cdfR.begin(), cdfR.end());
+    int cdfG_min = min_element(cdfG.begin(), cdfG.end());
+    int cdfB_min = min_element(cdfB.begin(), cdfB.end());
+
+    int total_pixels = height * width;
+    vector<int> filtered(256, 0);
+    for (int i = 0; i < 256; i++) {
+        filteredR[i] = round((float)(cdfR[i] - cdf_min) / (total_pixels - cdf_min) * 255);
+        filteredG[i] = round((float)(cdfG[i] - cdf_min) / (total_pixels - cdf_min) * 255);
+        filteredB[i] = round((float)(cdfB[i] - cdf_min) / (total_pixels - cdf_min) * 255);
+    }
+
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            pixels[y][x][0] = filteredR[pixels[y][x]];
+            pixels[y][x][1] = filteredG[pixels[y][x]];
+            pixels[y][x][2] = filteredB[pixels[y][x]];
+        }
+    }
+}

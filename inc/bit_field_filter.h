@@ -30,6 +30,9 @@ void Sobel_Gradient_Filter_Gray(Image *image);
 void Sobel_Gradient_Filter_RGB(Image *image);
 void Linear_Motion_Blur_Gray(Image *image, double angle, int kernel_size);
 void Linear_Motion_Blur_RGB(Image *image, double angle, int kernel_size);
-
+void Contrast_stretching_Gray(Image *image);
+void Contrast_stretching_RGB(Image *image);
+void Histogram_Equalization_Gray(Image *image);
+void Histogram_Equalization_RGB(Image *image);
 
 #endif
