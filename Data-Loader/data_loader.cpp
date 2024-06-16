@@ -134,6 +134,7 @@ void Data_Loader::Dump_Gray(int w, int h, int **pixels, string filename){
 }
 
 void Data_Loader::Dump_RGB(int w, int h, int ***pixels, string filename){
+    // cout << w << endl << h << endl << pixels[0][1][0] << endl;
     assert(pixels != nullptr && w > 0 && h > 0);
     // Create a CImg object with the specified width, height, and 3 channels (RGB)
     CImg<unsigned char> img(w, h, 1, 3);

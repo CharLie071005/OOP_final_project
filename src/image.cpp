@@ -1,12 +1,28 @@
 #include "image.h"
 
+<<<<<<< HEAD
 Image::Image(
 ){}
+=======
+Image::Image(){
+    height =0;
+    width =0;
+}
+
+Image::Image(int _h, int _w) {
+    height = _h;
+    width = _w;
+}
+>>>>>>> Factor2_Ou
 
 Image::~Image(){}
 
 bool Image::LoadImage(string filename){
+<<<<<<< HEAD
     cout << "Load Image's Load Image\n";
+=======
+    //cout << "LoadImage" << filename  << "  at Image.cpp" <<endl;
+>>>>>>> Factor2_Ou
     return true;
 }
 
@@ -39,11 +55,4 @@ int **Image::get_pixels(){
 }
 int ***Image::get_3D_pixels(){
     return 0;
-}
-
-void Image::List_Name_Directory(string Path, vector<string> &filenames){
-    bool SetUpName = data_loader.List_Directory(Path, filenames);
-    if (SetUpName != 0 ){
-        std::cout << "List Directory failed " << endl;
-    }
 }
