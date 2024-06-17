@@ -47,3 +47,9 @@ int **Image::get_pixels(){
 int ***Image::get_3D_pixels(){
     return 0;
 }
+
+void Image::Delete() {
+    std::string command = "rm -f ";
+    command += loadfilename;
+    system(command.c_str());
+}

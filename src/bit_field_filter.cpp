@@ -8,52 +8,52 @@ bool loadCase(int8_t option, Image *image){
     }   
     if (option & GRAY) {
         if (option & GRAY_BOX) {
-            std::cout << "\n\nLoad Gray Box\n\n" << std::endl;
-            Gray_Box_Filter(image, 5);
+            //std::cout << "\n\nLoad Gray Box\n\n" << std::endl;
+            Gray_Box_Filter(image, 10);
         }
         if (option & GRAY_Med) {
-            std::cout << "\n\nLoad Gray Med\n\n" << std::endl;
-            Median_Filter_Gray(image, 5);
+            //std::cout << "\n\nLoad Gray Med\n\n" << std::endl;
+            Median_Filter_Gray(image, 10);
         }
         if (option & GRAY_Sobel) {
-            std::cout << "\n\nLoad Gray Sobel\n\n" << std::endl;
+            //std::cout << "\n\nLoad Gray Sobel\n\n" << std::endl;
             Sobel_Gradient_Filter_Gray(image);
         }
         if (option & GRAY_Linear) {
-            std::cout << "\n\nLoad Gray Linear\n\n" << std::endl;
+            //std::cout << "\n\nLoad Gray Linear\n\n" << std::endl;
             Linear_Motion_Blur_Gray(image, 90.0, 10);
         }
         if (option & GRAY_Stretch) {
-            std::cout << "\n\nLoad Gray Stretch\n\n" << std::endl;
+            //std::cout << "\n\nLoad Gray Stretch\n\n" << std::endl;
             Contrast_Stretching_Gray(image);
         }
         if (option & GRAY_Histogram) {
-            std::cout << "\n\nLoad Gray Histogram\n\n" << std::endl;
+            //std::cout << "\n\nLoad Gray Histogram\n\n" << std::endl;
             Histogram_Equalization_Gray(image);
         }
     } else if (option & RGB) {
         if (option & RGB_BOX) {
-            std::cout << "\n\nLoad RGB Box\n\n" << std::endl;
-            RGB_Box_Filter(image, 5);
+            //std::cout << "\n\nLoad RGB Box\n\n" << std::endl;
+            RGB_Box_Filter(image, 10);
         }
         if (option & RGB_Med) {
-            std::cout << "\n\nLoad RGB Med\n\n" << std::endl;
-            Median_Filter_RGB(image, 5);
+            //std::cout << "\n\nLoad RGB Med\n\n" << std::endl;
+            Median_Filter_RGB(image, 10);
         }
         if (option & RGB_Sobel) {
-            std::cout << "\n\nLoad RGB Sobel\n\n" << std::endl;
+            //std::cout << "\n\nLoad RGB Sobel\n\n" << std::endl;
             Sobel_Gradient_Filter_RGB(image);
         }
         if (option & RGB_Linear) {
-            std::cout << "\n\nLoad RGB Linear\n\n" << std::endl;
+            //std::cout << "\n\nLoad RGB Linear\n\n" << std::endl;
             Linear_Motion_Blur_RGB(image, 90.0, 10);
         }
         if (option & RGB_Stretch) {
-            std::cout << "\n\nLoad RGB Stretch\n\n" << std::endl;
+            //std::cout << "\n\nLoad RGB Stretch\n\n" << std::endl;
             Contrast_Stretching_RGB(image);
         }
         if (option & RGB_Histogram) {
-            std::cout << "\n\nLoad RGB Histogram\n\n" << std::endl;
+            //std::cout << "\n\nLoad RGB Histogram\n\n" << std::endl;
             Histogram_Equalization_RGB(image);
         }
     }

@@ -27,10 +27,8 @@ PhotoMosaic::~PhotoMosaic() {
 
 RGBImage *PhotoMosaic::InputPath(const string& Bigphoto, const string &cifarDir){
     tarimage.LoadImage(Bigphoto);
-    cout << "Load tar success" <<endl;
     data_loader.List_Directory(cifarDir, sub_name);
     this->readSubImage();
-    cout << "Load SubImage success" <<endl;
     int tile_width = tarimage.get_width() / SUB_PIC_SIZE;
     int tile_height = tarimage.get_height() / SUB_PIC_SIZE;
     avgR_tar_grid = new int [tile_height * tile_width];
@@ -41,9 +39,12 @@ RGBImage *PhotoMosaic::InputPath(const string& Bigphoto, const string &cifarDir)
 
 void PhotoMosaic::readSubImage(){
     for(auto name : sub_name){
-        RGBImage img;
-        small_img[simage_number].LoadImage(name);
-        simage_number++;
+        if (small_img[simage_number].LoadImage(name)){
+            simage_number++;
+            // if (simage_number <= 10){
+            //     cout << name << endl;
+            // }
+        }
     }
     avgR_small = new int [simage_number];
     avgG_small = new int [simage_number];
@@ -55,10 +56,11 @@ void PhotoMosaic::readSubImage(){
 void PhotoMosaic::Calculate_SmallAverage() {
     for (int index =0; index < simage_number; ++index){
         for (int y = 0; y < SUB_PIC_SIZE; ++y) {
+        int *** _pixels = small_img[index].get_3D_pixels();
             for (int x = 0; x < SUB_PIC_SIZE; ++x) {
-                avgR_small[index] += small_img[index].get_3D_pixels()[y][x][0];
-                avgG_small[index] += small_img[index].get_3D_pixels()[y][x][1];
-                avgB_small[index] += small_img[index].get_3D_pixels()[y][x][2];
+                avgR_small[index] += _pixels[y][x][0];
+                avgG_small[index] += _pixels[y][x][1];
+                avgB_small[index] += _pixels[y][x][2];
             }
         }
         avgR_small[index] /= SUB_PIC_SIZE * SUB_PIC_SIZE;
@@ -91,6 +93,7 @@ void PhotoMosaic::Calculate_TarAverage() {
             index++;
         }
     }
+
 }
 
 // Find the best match index based on the average color
@@ -117,23 +120,25 @@ void PhotoMosaic::getBestMatchIndex() {
 
 // Generate the mosaic image
 RGBImage *PhotoMosaic::Generate_Mosaic() {
-    cout << "Enter Gen_Mosaic" <<endl;
     int height = tarimage.get_height(), width = tarimage.get_width();
     RGBImage *Mosaic = new RGBImage(height , width);  //remember to delete this in main.cpp
     Calculate_TarAverage();
-    cout << "Calc0ulate Target average success" <<endl;
     Calculate_SmallAverage();
-    cout << "Calculate small average success" <<endl;
-    int ***_pixels = Mosaic->get_3D_pixels();
-    int index =0;
-    for (int n_y =0; n_y <= height - SUB_PIC_SIZE; n_y += SUB_PIC_SIZE){
-        for (int n_x =0; n_x <= width - SUB_PIC_SIZE; n_x += SUB_PIC_SIZE){
-            int *** best_pixels = small_img[ Best_fit_index[index] ].get_3D_pixels();
-            for (int y = 0; y < SUB_PIC_SIZE + n_y; ++y) {
-                for (int x = 0; x < SUB_PIC_SIZE + n_x; ++x) {
-                    _pixels[n_y + y][n_x + x][0] = best_pixels[y][x][0];
-                    _pixels[n_y + y][n_x + x][1] = best_pixels[y][x][1];
-                    _pixels[n_y + y][n_x + x][2] = best_pixels[y][x][2];
+    getBestMatchIndex();
+    
+    int index = 0;
+    for (int n_y = 0; n_y < (height - SUB_PIC_SIZE); n_y += SUB_PIC_SIZE){
+        int ***_pixels = Mosaic->get_3D_pixels();
+        for (int n_x = 0; n_x < (width - SUB_PIC_SIZE); n_x += 32){
+            int bestIndex = Best_fit_index[index];
+            int *** best_pixels = small_img[bestIndex].get_3D_pixels();
+            for (int y = 0; y < SUB_PIC_SIZE; ++y) {
+                for (int x = 0; x < SUB_PIC_SIZE; ++x) {
+                    if (n_y + y < height && n_x + x < width) {
+                        _pixels[n_y + y][n_x + x][0] = best_pixels[y][x][0];
+                        _pixels[n_y + y][n_x + x][1] = best_pixels[y][x][1];
+                        _pixels[n_y + y][n_x + x][2] = best_pixels[y][x][2];
+                    }
                 }
             }
             index++;
@@ -141,4 +146,3 @@ RGBImage *PhotoMosaic::Generate_Mosaic() {
     }
     return Mosaic;
 }
-

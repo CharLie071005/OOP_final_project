@@ -41,13 +41,13 @@ void GrayImage::Display_ASCII(){
 
 void GrayImage::Display_CMD(){
     data_loader.Display_Gray_CMD(loadfilename);
-    /*  the following code is usgin system() to delete the .jpg we generate
+    //the following code is usgin system() to delete the .jpg we generate
+    
+}
+void GrayImage::Delete() {
     std::string command = "rm -f ";
     command += loadfilename;
-    int removeImage = system(command.c_str());
-    if (removeImage == 0){
-        std::cout << "成功刪除圖片" << endl;
-    }*/
+    system(command.c_str());
 }
 int **GrayImage::get_pixels(){
     return pixels;

@@ -20,6 +20,7 @@ class Image{
       virtual void Display_X_Server();
       virtual void Display_ASCII();
       virtual void Display_CMD();
+      virtual void Delete();
       int get_width();
       int get_height();
       // function
