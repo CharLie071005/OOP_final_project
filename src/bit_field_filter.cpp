@@ -32,12 +32,13 @@ bool loadCase(int8_t option, Image *image){
             Histogram_Equalization_Gray(image);
         }
     } else if (option & RGB) {
+        cout << "Enter rgb";
         if (option & RGB_BOX) {
             //std::cout << "\n\nLoad RGB Box\n\n" << std::endl;
             RGB_Box_Filter(image, 10);
         }
         if (option & RGB_Med) {
-            //std::cout << "\n\nLoad RGB Med\n\n" << std::endl;
+            std::cout << "\n\nLoad RGB Med\n\n" << std::endl;
             Median_Filter_RGB(image, 10);
         }
         if (option & RGB_Sobel) {
@@ -45,7 +46,7 @@ bool loadCase(int8_t option, Image *image){
             Sobel_Gradient_Filter_RGB(image);
         }
         if (option & RGB_Linear) {
-            //std::cout << "\n\nLoad RGB Linear\n\n" << std::endl;
+            std::cout << "\n\nLoad RGB Linear\n\n" << std::endl;
             Linear_Motion_Blur_RGB(image, 90.0, 10);
         }
         if (option & RGB_Stretch) {
